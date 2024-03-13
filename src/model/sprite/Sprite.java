@@ -3,19 +3,19 @@ package model.sprite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 
 import model.GameModel;
 
 public abstract class Sprite {
     GameModel model;
     Area shape;
-    Point point;
+    Point2D point;
     Dimension size;
     Image actualImage;
 
-    public Sprite(GameModel model, Area shape, Point point, Dimension size, Image actualImage) {
+    public Sprite(GameModel model, Area shape, Point2D point, Dimension size, Image actualImage) {
         this.model = model;
         this.shape = shape;
         this.point = point;
@@ -24,9 +24,7 @@ public abstract class Sprite {
     }
 
     public boolean isIntersect(Sprite sprite) {
-        Area shape = (Area)this.shape.clone();
-        shape.intersect(sprite.shape);
-        return !shape.isEmpty();
+        return isIntersect(sprite.shape);
     }
 
     public boolean isIntersect(Area area) {
