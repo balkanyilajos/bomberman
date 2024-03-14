@@ -14,9 +14,13 @@ import model.sprite.Sprite;
 
 public class Wall extends Sprite {
     
-    public Wall(GameModel model, Point2D point, Dimension dimension) throws IOException {
-        super(model, new Area(new Rectangle2D.Double(point.getX(), point.getY(), dimension.getWidth(), dimension.getHeight())),
-              point, dimension, ImageIO.read(new File("src/data/picture/wall.png")));
+    public Wall(GameModel model, Point2D point) throws IOException {
+        this(model, point, model.getCubeSize());
+    }
+
+    private Wall(GameModel model, Point2D point, Dimension size) throws IOException {
+        super(model, new Area(new Rectangle2D.Double(point.getX(), point.getY(), size.getWidth(), size.getHeight())),
+              point, size, ImageIO.read(new File("src/data/picture/wall.png")));
     }
 
 }

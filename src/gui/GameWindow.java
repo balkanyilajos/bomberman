@@ -7,12 +7,17 @@ import model.GameModel;
 
 public class GameWindow extends JFrame {
 
+    GamePanel gamePanel;
+
     public GameWindow(GameModel gameModel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(new GamePanel(gameModel));
+        gamePanel = new GamePanel(gameModel);
+        add(gamePanel);
         pack();
     }
 
-
+    public void repaint() {
+        gamePanel.repaint();
+    }
 
 }

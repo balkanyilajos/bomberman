@@ -1,25 +1,30 @@
 package model;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Timer;
+import java.util.HashSet;
 
-import javax.swing.JFrame;
+import javax.swing.Timer;
+
 import gui.GameWindow;
 import model.sprite.Sprite;
 import model.sprite.fixedelement.Wall;
+import model.sprite.weapon.Bomb;
 
 public class GameModel {
     private final String[] MAPS_PATH = {
             "src/data/map/1.txt"
     };
 
-    private final JFrame window;
-    private ArrayList<Sprite>[][] gameTable;
-    private int gameTableCols;
-    private int gameTableRows;
+    private final GameWindow window;
+    private ArrayList<Sprite>[][] board;
+    private HashSet<Sprite> sprites;
+    private int boardCols;
+    private int boardRows;
 
     // private int rounds;
     // private int roundsCounter;
@@ -36,8 +41,10 @@ public class GameModel {
 
     public GameModel() {
         window = new GameWindow(this);
+        sprites = new HashSet<>();
         fileReader(MAPS_PATH[0]);
         createTimer();
+        timer.start();
 
         window.setVisible(true);
     }
@@ -50,12 +57,16 @@ public class GameModel {
         this.cubeSize = new Dimension((int)Math.ceil(boardSize.getWidth()/numberOfCols), (int)Math.ceil(boardSize.getHeight()/numberOfRows));
     }
 
-    private void initGameTable(int numberOfCols, int numberOfRows) {
-        gameTableCols = numberOfCols;
-        gameTableRows = numberOfRows;
+    public Dimension getCubeSize() {
+        return (Dimension)cubeSize.clone();
+    }
+
+    private void initboard(int numberOfCols, int numberOfRows) {
+        boardCols = numberOfCols;
+        boardRows = numberOfRows;
         for(int i = 0; i < numberOfRows; i++) {
             for(int j = 0; j < numberOfCols; j++) {
-                gameTable[i][j] = new ArrayList<Sprite>();
+                board[i][j] = new ArrayList<Sprite>();
             }
         }
     }
@@ -68,8 +79,8 @@ public class GameModel {
             int numberOfRows = Integer.parseInt(tokens[1]);
             int numberOfCols = Integer.parseInt(tokens[0]);
             setCubeSize(numberOfCols, numberOfRows);
-            gameTable = new ArrayList[numberOfRows][numberOfCols];
-            initGameTable(numberOfCols, numberOfRows);
+            board = new ArrayList[numberOfRows][numberOfCols];
+            initboard(numberOfCols, numberOfRows);
 
             for(int i = 0; i < numberOfRows; i++) {
                 line = br.readLine();
@@ -77,9 +88,17 @@ public class GameModel {
                 for(int j = 0; j < numberOfCols; j++) {
                     switch (tokens[j]) {
                         case "X":
-                            gameTable[i][j].add(new Wall(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), (Dimension)cubeSize.clone()));
+                            Wall wall = new Wall(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            board[i][j].add(wall);
+                            sprites.add(wall);
                             break;
                     
+                        case "O":
+                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 3);
+                            board[i][j].add(bomb);
+                            sprites.add(bomb);
+                            break;
+                        
                         default:
                             break;
                     }
@@ -95,26 +114,35 @@ public class GameModel {
     }
 
     private void createTimer() {
-        timer = new Timer();
+        timer = new Timer(0, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                window.repaint();
+            }
+        });
     }
 
     public Point getIndexFromCoords(Point2D coord) {
         return new Point((int)(coord.getX() / this.cubeSize.getWidth()), (int)(coord.getY() / this.cubeSize.getHeight()));
     }
 
-    public ArrayList<Sprite> getBoardSprites(Point2D point, double pixelRadius) {
-        ArrayList<Sprite> returnSprites = new ArrayList<>();
+    public Point2D getCoordsFromIndex(Point coord) {
+        return new Point2D.Double(coord.getX() * this.cubeSize.getWidth(), coord.getY() * this.cubeSize.getHeight());
+    }
 
-        Point pointIndex = getIndexFromCoords(point);
+    public HashSet<Sprite> getBoardSprites(Point2D coord, double pixelRadius) {
+        HashSet<Sprite> returnSprites = new HashSet<>();
+
+        Point pointIndex = getIndexFromCoords(coord);
         Point pixelRadiusIndex = getIndexFromCoords(new Point2D.Double(pixelRadius, pixelRadius));
         int startColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() >= 0) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : 0;
-        int endColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() <  gameTableCols) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : gameTableCols;
+        int endColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() <  boardCols) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : boardCols;
         int startRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() >= 0) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : 0;
-        int endRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() <  gameTableCols) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : gameTableRows;
+        int endRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() <  boardCols) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : boardRows;
 
         for(int i = startRowIndex; i < endRowIndex; i++) {
             for(int j = startColIndex; j < endColIndex; j++) {
-                for(Sprite sprite : gameTable[i][j]) {
+                for(Sprite sprite : board[i][j]) {
                     returnSprites.add(sprite);
                 }
             }
@@ -123,18 +151,20 @@ public class GameModel {
         return returnSprites;
     }
 
-    public ArrayList<Sprite> getBoardSprites() {
-        ArrayList<Sprite> returnSprites = new ArrayList<>();
+    public HashSet<Sprite> getBoardSprites() {       
+        return sprites;
+    }
 
-        for(ArrayList<Sprite>[] row : gameTable) {
-            for(ArrayList<Sprite> sprites : row) {
-                for(Sprite sprite : sprites) {
-                    returnSprites.add(sprite);
-                }
-            }
-        }
-        
-        return returnSprites;
+    public void addSpriteToBoard(Sprite sprite) {
+        Point indexPoint = getIndexFromCoords(sprite.getPoint());
+        this.board[(int)indexPoint.getY()][(int)indexPoint.getX()].add(sprite);
+        sprites.add(sprite);
+    }
+
+    public void deleteSpriteFromBoard(Sprite sprite) {
+        Point indexPoint = getIndexFromCoords(sprite.getPoint());
+        this.board[(int)indexPoint.getY()][(int)indexPoint.getX()].remove(sprite);
+        sprites.remove(sprite);
     }
 
 }
