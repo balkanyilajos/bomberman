@@ -18,6 +18,9 @@ public class GameModel {
 
     private final JFrame window;
     private ArrayList<Sprite>[][] gameTable;
+    private int gameTableCols;
+    private int gameTableRows;
+
     // private int rounds;
     // private int roundsCounter;
 
@@ -33,7 +36,6 @@ public class GameModel {
 
     public GameModel() {
         window = new GameWindow(this);
-        cubeSize = new Dimension(50,50);
         fileReader(MAPS_PATH[0]);
         createTimer();
 
@@ -49,6 +51,8 @@ public class GameModel {
     }
 
     private void initGameTable(int numberOfCols, int numberOfRows) {
+        gameTableCols = numberOfCols;
+        gameTableRows = numberOfRows;
         for(int i = 0; i < numberOfRows; i++) {
             for(int j = 0; j < numberOfCols; j++) {
                 gameTable[i][j] = new ArrayList<Sprite>();
@@ -92,6 +96,31 @@ public class GameModel {
 
     private void createTimer() {
         timer = new Timer();
+    }
+
+    public Point getIndexFromCoords(Point2D coord) {
+        return new Point((int)(coord.getX() / this.cubeSize.getWidth()), (int)(coord.getY() / this.cubeSize.getHeight()));
+    }
+
+    public ArrayList<Sprite> getBoardSprites(Point2D point, double pixelRadius) {
+        ArrayList<Sprite> returnSprites = new ArrayList<>();
+
+        Point pointIndex = getIndexFromCoords(point);
+        Point pixelRadiusIndex = getIndexFromCoords(new Point2D.Double(pixelRadius, pixelRadius));
+        int startColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() >= 0) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : 0;
+        int endColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() <  gameTableCols) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : gameTableCols;
+        int startRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() >= 0) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : 0;
+        int endRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() <  gameTableCols) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : gameTableRows;
+
+        for(int i = startRowIndex; i < endRowIndex; i++) {
+            for(int j = startColIndex; j < endColIndex; j++) {
+                for(Sprite sprite : gameTable[i][j]) {
+                    returnSprites.add(sprite);
+                }
+            }
+        }
+        
+        return returnSprites;
     }
 
     public ArrayList<Sprite> getBoardSprites() {
