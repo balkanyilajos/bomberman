@@ -105,7 +105,7 @@ public class Bomb extends Sprite {
             }
         }
         
-        executorService.schedule(() -> destructor(), 5, TimeUnit.MILLISECONDS);
+        executorService.schedule(() -> destructor(), 1, TimeUnit.MILLISECONDS);
     }
 
     private boolean doFlameAction(HashSet<Sprite> sprites, Dimension addPixel, ArrayList<Flame> flames, boolean isGreaterThanToRange, Point2D toRange, Action direction) {
