@@ -55,12 +55,18 @@ public class Flame extends Sprite {
     
     @Override
     public boolean isIntersect(Sprite sprite) {
+        Area examinedArea = sprite.getArea();
+        examinedArea.intersect(area);
         if(sprite instanceof Wall) {
-            Area examinedArea = sprite.getArea();
-            examinedArea.intersect(area);
             return !examinedArea.isEmpty();
         }
-        return false;
+        else if (!examinedArea.isEmpty()) {
+            sprite.destructor();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
