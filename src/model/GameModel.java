@@ -12,6 +12,7 @@ import javax.swing.Timer;
 
 import gui.GameWindow;
 import model.sprite.Sprite;
+import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.weapon.Bomb;
 
@@ -94,9 +95,15 @@ public class GameModel {
                             break;
                     
                         case "O":
-                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), this.cubeSize.getWidth(), 2);
+                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 2);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
+                            break;
+                        
+                        case "N":
+                            Box box = new Box(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            board[i][j].add(box);
+                            sprites.add(box);
                             break;
                         
                         default:
@@ -104,6 +111,15 @@ public class GameModel {
                     }
                 }
             }
+            Bomb b = new Bomb(this, new Point2D.Double(5*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            board[5][5].add(b);
+            sprites.add(b);
+            b = new Bomb(this, new Point2D.Double(3*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            board[5][3].add(b);
+            sprites.add(b);
+            b = new Bomb(this, new Point2D.Double(1*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            board[5][1].add(b);
+            sprites.add(b);
         } 
         catch (FileNotFoundException e) {
             System.out.println(e);
