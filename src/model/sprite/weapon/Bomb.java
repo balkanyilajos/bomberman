@@ -2,14 +2,11 @@ package model.sprite.weapon;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.geom.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.GameModel;
 import model.sprite.Sprite;
@@ -37,26 +34,22 @@ public class Bomb extends Sprite {
         this(model, point, radius, model.getCubeSize());
     }
 
-    private Bomb(GameModel model, Point2D point, double radius, Dimension size) throws IOException {
-        super(model, new Area(new Ellipse2D.Double(point.getX(), point.getY(), size.getWidth(), size.getHeight())),
-              point, size, ImageIO.read(new File("src/data/picture/bomb.png")));
-        
+    private Bomb(GameModel model,Point2D imagePoint, double radius, Dimension size) throws IOException {
+        super(model, null, imagePoint, null, size, "src/data/picture/bomb.png");
+        this.areaPoint = new Point2D.Double(imagePoint.getX() + size.getWidth()*0.1, imagePoint.getY() + size.getHeight()*0.1);
+        this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth()*0.8, size.getHeight()*0.8));
         this.radius = radius;
         this.size = size;
         this.isDestroyed = false;
         this.startFlameIndex = 0;
-        Image flameUpImage = ImageIO.read(new File("src/data/picture/flame-up.png"));
-        Image flameDownImage = ImageIO.read(new File("src/data/picture/flame-down.png"));
-        Image flameLeftImage = ImageIO.read(new File("src/data/picture/flame-left.png"));
-        Image flameRightImage = ImageIO.read(new File("src/data/picture/flame-right.png"));
         this.flameUp = new ArrayList<>();
         this.flameDown = new ArrayList<>();
         this.flameRight = new ArrayList<>();
         this.flameLeft = new ArrayList<>();
-        flameUp.add(new Flame(model, point, size, null));
-        flameDown.add(point);
-        flameRight.add(point);
-        flameLeft.add(point);
+        flameUp.add(new Flame(model, areaPoint, new Action(true, false, false, false)));
+        flameDown.add(new Flame(model, areaPoint, new Action(false, true, false, false)));
+        flameRight.add(new Flame(model, areaPoint, new Action(false, false, false, true)));
+        flameLeft.add(new Flame(model, areaPoint, new Action(false, false, true, false)));
         this.executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -64,49 +57,65 @@ public class Bomb extends Sprite {
     public void draw(Graphics graphics) {
         if(isDestroyed) {
             for(int i = startFlameIndex; i < flameUp.size(); i++) {
-                graphics.drawImage(flameUpImage, (int)flameUp.get(i).getX(), (int)flameUp.get(i).getY(), (int)size.getWidth(), (int)size.getHeight(), null);
+                flameUp.get(i).draw(graphics);
             }
             for(int i = startFlameIndex; i < flameDown.size(); i++) {
-                graphics.drawImage(flameDownImage, (int)flameDown.get(i).getX(), (int)flameDown.get(i).getY(), (int)size.getWidth(), (int)size.getHeight(), null);
+                flameDown.get(i).draw(graphics);
             }
             for(int i = startFlameIndex; i < flameLeft.size(); i++) {
-                graphics.drawImage(flameLeftImage, (int)flameLeft.get(i).getX(), (int)flameLeft.get(i).getY(), (int)size.getWidth(), (int)size.getHeight(), null);
+                flameLeft.get(i).draw(graphics);
             }
             for(int i = startFlameIndex; i < flameRight.size(); i++) {
-                graphics.drawImage(flameRightImage, (int)flameRight.get(i).getX(), (int)flameRight.get(i).getY(), (int)size.getWidth(), (int)size.getHeight(), null);
+                flameRight.get(i).draw(graphics);
             }
         }
         else {
-            graphics.drawImage(actualImage, (int)point.getX(), (int)point.getY(), (int)size.getWidth(), (int)size.getHeight(), null);
+            graphics.drawImage(actualImage, (int)imagePoint.getX(), (int)imagePoint.getY(), (int)size.getWidth(), (int)size.getHeight(), null);
         }
     }
 
     @Override
     public void destructor() {
+        final int ADD_PIXEL = 5;
         boolean hasChange = false;
-        if(flameRight.get(flameRight.size()-1).getX() + 10 < radius + point.getX()) {
-            flameRight.add(new Point2D.Double(flameRight.get(flameRight.size()-1).getX() + 10, point.getY()));
+
+        HashSet<Sprite> sprites = model.getBoardSprites(areaPoint, radius);
+        sprites.remove(this);
+
+        Point2D.Double coord = (Point2D.Double)flameRight.get(flameRight.size()-1).getImagePoint();
+        coord.x += ADD_PIXEL;
+        if(!sprites.stream().anyMatch(n -> flameRight.get(flameRight.size()-1).isIntersect(n)) && coord.getX() < radius + areaPoint.getX() + 3*ADD_PIXEL) {
+            flameRight.add(new Flame(model, coord, new Action(false, false, false, true)));
             hasChange = true;
         }
-        if(flameLeft.get(flameLeft.size()-1).getX() - 1 > point.getX() - radius) {
-            flameLeft.add(new Point2D.Double(flameLeft.get(flameLeft.size()-1).getX() - 10, point.getY()));
+
+        coord = (Point2D.Double)flameLeft.get(flameLeft.size()-1).getImagePoint();
+        coord.x -= ADD_PIXEL;
+        if(!sprites.stream().anyMatch(n -> flameLeft.get(flameLeft.size()-1).isIntersect(n)) && coord.getX() > areaPoint.getX() - radius - 3*ADD_PIXEL) {
+            flameLeft.add(new Flame(model, coord, new Action(false, false, true, false)));
             hasChange = true;
         }
-        if(flameDown.get(flameDown.size()-1).getY() + 1 < radius + point.getY()) {
-            flameDown.add(new Point2D.Double(point.getX(), flameDown.get(flameDown.size()-1).getY() + 10));
+
+        coord = (Point2D.Double)flameDown.get(flameDown.size()-1).getImagePoint();
+        coord.y += ADD_PIXEL;
+        if(!sprites.stream().anyMatch(n -> flameDown.get(flameDown.size()-1).isIntersect(n)) && coord.getY() < radius + areaPoint.getY() + 3*ADD_PIXEL) {
+            flameDown.add(new Flame(model, coord, new Action(false, true, false, false)));
             hasChange = true;
         }
-        if(flameUp.get(flameUp.size()-1).getY() - 1 > point.getY() - radius) {
-            flameUp.add(new Point2D.Double(point.getX(), flameUp.get(flameUp.size()-1).getY() - 10));
+
+        coord = (Point2D.Double)flameUp.get(flameUp.size()-1).getImagePoint();
+        coord.y -= ADD_PIXEL;
+        if(!sprites.stream().anyMatch(n -> flameUp.get(flameUp.size()-1).isIntersect(n)) && coord.getY() > areaPoint.getY() - radius - 3*ADD_PIXEL) {
+            flameUp.add(new Flame(model, coord, new Action(true, false, false, false)));
             hasChange = true;
         }
         
-        if(flameUp.size() >= startFlameIndex && flameDown.size() >= startFlameIndex &&
-           flameRight.size() >= startFlameIndex && flameLeft.size() >= startFlameIndex) {
+        if(flameUp.size() >= startFlameIndex || flameDown.size() >= startFlameIndex ||
+           flameRight.size() >= startFlameIndex || flameLeft.size() >= startFlameIndex) {
             if(!hasChange) {
                 startFlameIndex += 1;
             }
-            executorService.schedule(() -> destructor(), 40, TimeUnit.MILLISECONDS);
+            executorService.schedule(() -> destructor(), 10, TimeUnit.MILLISECONDS);
         }
         else {
             this.model.deleteSpriteFromBoard(this);

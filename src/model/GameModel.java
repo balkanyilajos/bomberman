@@ -94,7 +94,7 @@ public class GameModel {
                             break;
                     
                         case "O":
-                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 3);
+                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), this.cubeSize.getWidth(), 2);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
                             break;
@@ -136,12 +136,12 @@ public class GameModel {
         Point pointIndex = getIndexFromCoords(coord);
         Point pixelRadiusIndex = getIndexFromCoords(new Point2D.Double(pixelRadius, pixelRadius));
         int startColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() >= 0) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : 0;
-        int endColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() <  boardCols) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : boardCols;
+        int endColIndex = (pointIndex.getX() + pixelRadiusIndex.getX() <  boardCols) ? (int)(pointIndex.getX() + pixelRadiusIndex.getX()) : boardCols-1;
         int startRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() >= 0) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : 0;
-        int endRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() <  boardCols) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : boardRows;
+        int endRowIndex = (pointIndex.getY() + pixelRadiusIndex.getY() <  boardCols) ? (int)(pointIndex.getY() + pixelRadiusIndex.getY()) : boardRows-1;
 
-        for(int i = startRowIndex; i < endRowIndex; i++) {
-            for(int j = startColIndex; j < endColIndex; j++) {
+        for(int i = startRowIndex; i <= endRowIndex; i++) {
+            for(int j = startColIndex; j <= endColIndex; j++) {
                 for(Sprite sprite : board[i][j]) {
                     returnSprites.add(sprite);
                 }
@@ -156,13 +156,13 @@ public class GameModel {
     }
 
     public void addSpriteToBoard(Sprite sprite) {
-        Point indexPoint = getIndexFromCoords(sprite.getPoint());
+        Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
         this.board[(int)indexPoint.getY()][(int)indexPoint.getX()].add(sprite);
         sprites.add(sprite);
     }
 
     public void deleteSpriteFromBoard(Sprite sprite) {
-        Point indexPoint = getIndexFromCoords(sprite.getPoint());
+        Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
         this.board[(int)indexPoint.getY()][(int)indexPoint.getX()].remove(sprite);
         sprites.remove(sprite);
     }

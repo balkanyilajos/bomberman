@@ -1,8 +1,9 @@
 package model.sprite.weapon;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Polygon;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -18,35 +19,55 @@ import model.util.Action;
 
 public class Flame extends Sprite {
 
-    private Flame(GameModel model, Point2D point, Dimension size, Action direction) throws IOException {
-        super(model, null, point, size, null);
-        if(direction.isLeft() || direction.isRight()) {
-            this.shape = new Area(new Ellipse2D.Double(point.getX(), point.getY(), size.getWidth(), size.getHeight()));
-            if(direction.isLeft()) {
-                this.actualImage = ImageIO.read(new File("src/data/picture/flame-left.png"));
+    public Flame(GameModel model, Point2D point, Action direction) {
+        this(model, point, new Dimension((int)(model.getCubeSize().width*0.8), (int)(model.getCubeSize().height*0.8)), direction);
+    }
+
+    public Flame(GameModel model, Point2D imagePoint, Dimension size, Action direction) {
+        super(model, null, imagePoint, (Point2D)imagePoint.clone(), size, null);
+        try {
+            if(direction.isLeft() || direction.isRight()) {
+                //this.areaPoint = new Point2D.Double(imagePoint.getX()+size.getWidth()*0.1, imagePoint.getY()+size.getHeight()*0.1);
+                this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth(), size.getHeight()));
+                if(direction.isLeft()) {
+                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-left.png"));
+                }
+                else {
+                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-right.png"));
+                }
             }
             else {
-                this.actualImage = ImageIO.read(new File("src/data/picture/flame-right.png"));
-            }         
-        }
-        else {
-            this.shape = new Area(new Ellipse2D.Double(point.getX(), point.getY(), size.getWidth(), size.getHeight()));
-            if(direction.isUp()) {
-                this.actualImage = ImageIO.read(new File("src/data/picture/flame-up.png"));
-            }
-            else {
-                this.actualImage = ImageIO.read(new File("src/data/picture/flame-down.png"));
+                //this.areaPoint = new Point2D.Double(imagePoint.getX()+size.getWidth()*0.1, imagePoint.getY()+size.getHeight()*0.1);
+                this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth(), size.getHeight()));
+                if(direction.isUp()) {
+                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-up.png"));
+                }
+                else {
+                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-down.png"));
+                }
             }
         }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+        
     }
     
     @Override
     public boolean isIntersect(Sprite sprite) {
-        if(!(sprite instanceof Wall)) {
-            sprite.getShape().intersect(shape);
-            return !shape.isEmpty();
+        if(sprite instanceof Wall) {
+            Area examinedArea = sprite.getArea();
+            examinedArea.intersect(area);
+            return !examinedArea.isEmpty();
         }
         return false;
+    }
+
+    @Override
+    public void draw(Graphics graphics) {
+        //graphics.setColor(Color.red);
+        //((Graphics2D) graphics).fill(area);
+        graphics.drawImage(actualImage, (int)imagePoint.getX(), (int)imagePoint.getY(), (int)imageSize.getWidth(), (int)imageSize.getHeight(), null);
     }
 
 }

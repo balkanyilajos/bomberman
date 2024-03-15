@@ -7,11 +7,14 @@ public class Action {
     private boolean down;
     
     public Action() {
-        this(false);
+        this(false, false, false, false);
     }
 
-    public Action(boolean init) {
-        left = right = up = down = init;
+    public Action(boolean up, boolean down, boolean left, boolean right) {
+        this.up = up;
+        this.down = down;
+        this.left = left;
+        this.right = right;
     }
     
     public boolean isLeft() {
