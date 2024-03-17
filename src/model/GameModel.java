@@ -138,6 +138,7 @@ public class GameModel {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 double deltaTime = getDeltaTime(updatePreviousTime(), previousTime);
+                
                 updateSprites(deltaTime);
                 window.repaint();
             }

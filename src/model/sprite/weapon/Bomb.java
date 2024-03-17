@@ -29,11 +29,11 @@ public class Bomb extends Sprite {
     private double elapsedTime;
 
     public Bomb(GameModel model, Point2D point, double radius, double explosionSeconds) {
-        this(model, point, radius, model.getCubeSize(), explosionSeconds, 0.02);
+        this(model, point, radius, model.getCubeSize(), explosionSeconds, 0.04);
     }
 
     public Bomb(GameModel model, Point2D point, double radius) {
-        this(model, point, radius, model.getCubeSize(), -1, 0.02);
+        this(model, point, radius, model.getCubeSize(), -1, 0.04);
     }
 
     private Bomb(GameModel model, Point2D imagePoint, double radius, Dimension size, double explosionSeconds, double flameSeconds) {
@@ -90,14 +90,14 @@ public class Bomb extends Sprite {
     @Override
     public void destructor() {
         isDestroyed = true;
-        int addPixel = 5;
+        int addPixel = 15;
         HashSet<Sprite> sprites = model.getBoardSprites(areaPoint, radius);
         sprites.remove(this);
 
-        bombAction.right = bombAction.right && doFlameAction(sprites, new Dimension(addPixel, 0), flameRight, false, new Point2D.Double(radius + areaPoint.getX() + 3*addPixel, Double.MAX_VALUE), new Action(false, false, false, true));
-        bombAction.left = bombAction.left && doFlameAction(sprites, new Dimension(-addPixel, 0), flameLeft, true, new Point2D.Double(areaPoint.getX() - radius - 3*addPixel, Double.MIN_VALUE), new Action(false, false, true, false));
-        bombAction.down = bombAction.down && doFlameAction(sprites, new Dimension(0, addPixel), flameDown, false, new Point2D.Double(Double.MAX_VALUE, radius + areaPoint.getY() + 3*addPixel), new Action(false, true, false, false));
-        bombAction.up = bombAction.up && doFlameAction(sprites, new Dimension(0, -addPixel), flameUp, true, new Point2D.Double(Double.MIN_VALUE, areaPoint.getY() - radius - 3*addPixel), new Action(true, false, false, false));
+        bombAction.right = bombAction.right && doFlameAction(sprites, new Dimension(addPixel, 0), flameRight, false, new Point2D.Double(radius + areaPoint.getX() + addPixel, Double.MAX_VALUE), new Action(false, false, false, true));
+        bombAction.left = bombAction.left && doFlameAction(sprites, new Dimension(-addPixel, 0), flameLeft, true, new Point2D.Double(areaPoint.getX() - radius - addPixel, Double.MIN_VALUE), new Action(false, false, true, false));
+        bombAction.down = bombAction.down && doFlameAction(sprites, new Dimension(0, addPixel), flameDown, false, new Point2D.Double(Double.MAX_VALUE, radius + areaPoint.getY() + addPixel), new Action(false, true, false, false));
+        bombAction.up = bombAction.up && doFlameAction(sprites, new Dimension(0, -addPixel), flameUp, true, new Point2D.Double(Double.MIN_VALUE, areaPoint.getY() - radius - addPixel), new Action(true, false, false, false));
     }
 
     @Override
@@ -105,8 +105,9 @@ public class Bomb extends Sprite {
         elapsedTime += deltaTime;
         if(isDestroyed) {
             if(elapsedTime >= flameSeconds) {
-                elapsedTime = 0;
+                elapsedTime -= flameSeconds;
                 if(bombAction.any()) {
+                    flameSeconds *= 1.08;
                     destructor();
                 }
                 else {
