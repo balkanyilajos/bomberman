@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
 
 import model.GameModel;
 import model.sprite.Sprite;

@@ -32,7 +32,7 @@ public class BoardPanel extends JPanel {
         setPreferredSize(dimension);
     }
 
-    private void createBackGround(Graphics graphics) {
+    private void createBackground(Graphics graphics) {
         Dimension grassDimension = new Dimension((int)(dimension.getWidth()/10), (int)(dimension.getHeight()/10));
         
         double width = 0;
@@ -50,8 +50,8 @@ public class BoardPanel extends JPanel {
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
         Graphics2D g = (Graphics2D) grphcs;
-        
-        createBackGround(g);
+
+        createBackground(g);
         for(Sprite sprite : gameModel.getBoardSprites()) {
             sprite.draw(g);
         }

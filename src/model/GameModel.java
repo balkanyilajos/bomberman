@@ -37,10 +37,11 @@ public class GameModel {
     private Dimension boardSize;
 
     private Timer timer;
-    // private long previousTime;
+    private long previousTime;
     // private int gameOverCooldownSeconds;
 
     public GameModel() {
+        previousTime = System.nanoTime();
         window = new GameWindow(this);
         sprites = new HashSet<>();
         fileReader(MAPS_PATH[0]);
@@ -95,7 +96,7 @@ public class GameModel {
                             break;
                     
                         case "O":
-                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 2);
+                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 3);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
                             break;
@@ -136,9 +137,27 @@ public class GameModel {
         timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                double deltaTime = getDeltaTime(updatePreviousTime(), previousTime);
+                updateSprites(deltaTime);
                 window.repaint();
             }
         });
+    }
+
+    private long updatePreviousTime() {
+        long temp = this.previousTime;
+        this.previousTime = System.nanoTime();
+        return temp;
+    }
+
+    private double getDeltaTime(long previousTime, long currentTime) {
+        return (currentTime - previousTime) / 1_000_000_000.0;
+    }
+
+    private void updateSprites(double deltaTime) {
+        for(Sprite sprite : getBoardSprites()) {
+            sprite.update(deltaTime);
+        }
     }
 
     public Point getIndexFromCoords(Point2D coord) {
@@ -170,8 +189,9 @@ public class GameModel {
         return returnSprites;
     }
 
-    public HashSet<Sprite> getBoardSprites() {       
-        return sprites;
+    @SuppressWarnings("unchecked")
+    public HashSet<Sprite> getBoardSprites() {
+        return (HashSet<Sprite>)sprites.clone();
     }
 
     public void addSpriteToBoard(Sprite sprite) {

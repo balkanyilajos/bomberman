@@ -66,5 +66,8 @@ public abstract class Sprite {
     public void destructor() {
         this.model.deleteSpriteFromBoard(this);
     }
+    
+    public void update(double deltaTime) {
 
+    }
 }
