@@ -10,7 +10,8 @@ public class GamePanel extends JPanel {
 
     public GamePanel(GameModel gameModel) {
         setLayout(new BorderLayout());
-        add(new BoardPanel(gameModel), BorderLayout.NORTH);
+        add(new MenuPanel(gameModel), BorderLayout.NORTH);
+        add(new BoardPanel(gameModel), BorderLayout.CENTER);
     }
 
 }
