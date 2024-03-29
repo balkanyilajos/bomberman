@@ -20,6 +20,7 @@ public class BoardPanel extends JPanel {
 
     public BoardPanel(GameModel gameModel) {
         this.gameModel = gameModel;
+        this.dimension = gameModel.getBoardPixelSize();
         try {
             this.grass = ImageIO.read(new File("src/data/picture/grass.jpg"));
         }
@@ -27,9 +28,9 @@ public class BoardPanel extends JPanel {
             System.out.println(e);
         }
         
-        dimension = new Dimension(600, 600);
-        gameModel.setBoardSize((int)dimension.getWidth(), (int)dimension.getHeight());
         setPreferredSize(dimension);
+        //dimension = new Dimension(600, 600);
+        //gameModel.init((Dimension)dimension.clone());
     }
 
     private void createBackground(Graphics graphics) {
