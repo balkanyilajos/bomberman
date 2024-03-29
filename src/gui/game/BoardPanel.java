@@ -28,7 +28,7 @@ public class BoardPanel extends JPanel {
         }
         
         dimension = new Dimension(600, 600);
-        gameModel.setBoardSize((int)dimension.getWidth(), (int)dimension.getHeight());
+        gameModel.init((Dimension)dimension.clone());
         setPreferredSize(dimension);
     }
 
