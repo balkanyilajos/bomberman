@@ -23,23 +23,21 @@ public class Flame extends Sprite {
         super(model, null, imagePoint, (Point2D)imagePoint.clone(), size, null);
         try {
             if(direction.left || direction.right) {
-                //this.areaPoint = new Point2D.Double(imagePoint.getX()+size.getWidth()*0.1, imagePoint.getY()+size.getHeight()*0.1);
                 this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth(), size.getHeight()));
                 if(direction.left) {
-                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-left.png"));
+                    this.actualImage = ImageIO.read(new File("src/data/picture/bomb/flame-left.png"));
                 }
                 else {
-                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-right.png"));
+                    this.actualImage = ImageIO.read(new File("src/data/picture/bomb/flame-right.png"));
                 }
             }
             else {
-                //this.areaPoint = new Point2D.Double(imagePoint.getX()+size.getWidth()*0.1, imagePoint.getY()+size.getHeight()*0.1);
                 this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth(), size.getHeight()));
                 if(direction.up) {
-                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-up.png"));
+                    this.actualImage = ImageIO.read(new File("src/data/picture/bomb/flame-up.png"));
                 }
                 else {
-                    this.actualImage = ImageIO.read(new File("src/data/picture/flame-down.png"));
+                    this.actualImage = ImageIO.read(new File("src/data/picture/bomb/flame-down.png"));
                 }
             }
         }

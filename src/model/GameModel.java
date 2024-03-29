@@ -12,6 +12,7 @@ import javax.swing.Timer;
 
 import gui.GameWindow;
 import model.sprite.Sprite;
+import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.weapon.Bomb;
@@ -88,42 +89,49 @@ public class GameModel {
                 line = br.readLine();
                 tokens = line.split(" ");
                 for(int j = 0; j < numberOfCols; j++) {
+                    Point2D startPoint = new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight());
                     switch (tokens[j]) {
                         case "X":
-                            Wall wall = new Wall(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            Wall wall = new Wall(this, startPoint);
                             board[i][j].add(wall);
                             sprites.add(wall);
                             break;
                     
                         case "O":
-                            Bomb bomb = new Bomb(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * this.cubeSize.getWidth(), 3);
+                            Bomb bomb = new Bomb(this, startPoint, 2 * this.cubeSize.getWidth(), 3);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
                             break;
                         
                         case "N":
-                            Box box = new Box(this, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            Box box = new Box(this, startPoint);
                             board[i][j].add(box);
                             sprites.add(box);
                             break;
                         
+                        case "B":
+                            Barrier barrier = new Barrier(this, startPoint);
+                            board[i][j].add(barrier);
+                            sprites.add(barrier);
+                            break;
+
                         default:
                             break;
                     }
                 }
             }
-            Bomb b = new Bomb(this, new Point2D.Double(5*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[5][5].add(b);
-            sprites.add(b);
-            b = new Bomb(this, new Point2D.Double(3*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[5][3].add(b);
-            sprites.add(b);
-            b = new Bomb(this, new Point2D.Double(1*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[5][1].add(b);
-            sprites.add(b);
-            b = new Bomb(this, new Point2D.Double(7*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[5][7].add(b);
-            sprites.add(b);
+            // Bomb b = new Bomb(this, new Point2D.Double(5*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            // board[5][5].add(b);
+            // sprites.add(b);
+            // b = new Bomb(this, new Point2D.Double(3*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            // board[5][3].add(b);
+            // sprites.add(b);
+            // b = new Bomb(this, new Point2D.Double(1*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            // board[5][1].add(b);
+            // sprites.add(b);
+            // b = new Bomb(this, new Point2D.Double(7*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            // board[5][7].add(b);
+            // sprites.add(b);
         } 
         catch (FileNotFoundException e) {
             System.out.println(e);

@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 import model.GameModel;
 import model.sprite.Sprite;
+import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.util.Action;
@@ -37,7 +38,7 @@ public class Bomb extends Sprite {
     }
 
     private Bomb(GameModel model, Point2D imagePoint, double radius, Dimension size, double explosionSeconds, double flameSeconds) {
-        super(model, null, imagePoint, null, size, "src/data/picture/bomb.png");
+        super(model, null, imagePoint, null, size, "src/data/picture/bomb/bomb.png");
         this.areaPoint = new Point2D.Double(imagePoint.getX() + size.getWidth() * 0.1,
                 imagePoint.getY() + size.getHeight() * 0.1);
         this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), size.getWidth() * 0.8,
@@ -169,7 +170,7 @@ public class Bomb extends Sprite {
         }
         else {
             sprite.destructor();
-            if (sprite instanceof Box) {
+            if (sprite instanceof Box || sprite instanceof Barrier) {
                 return true;
             }
         }
