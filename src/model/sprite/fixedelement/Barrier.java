@@ -59,6 +59,7 @@ public class Barrier extends Sprite {
         }
     }
 
+    @Override
     public void update(double deltaTime) {
         if(isDestroyed) {
             elapsedTime += deltaTime;

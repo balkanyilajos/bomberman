@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import model.sprite.Sprite;
+import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.weapon.Bomb;
@@ -85,25 +86,32 @@ public class MapReader {
                 line = br.readLine();
                 tokens = line.split(" ");
                 for(int j = 0; j < boardIndexSize.width; j++) {
+                    Point2D point = new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight());
                     switch (tokens[j]) {
                         case "X":
-                            Wall wall = new Wall(model, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            Wall wall = new Wall(model, point);
                             board[i][j].add(wall);
                             sprites.add(wall);
                             break;
                     
                         case "O":
-                            Bomb bomb = new Bomb(model, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()), 2 * cubeSize.getWidth(), 3);
+                            Bomb bomb = new Bomb(model, point, 2 * cubeSize.getWidth(), 3);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
                             break;
                         
                         case "N":
-                            Box box = new Box(model, new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight()));
+                            Box box = new Box(model, point);
                             board[i][j].add(box);
                             sprites.add(box);
                             break;
                         
+                        case "B":
+                            Barrier barrier = new Barrier(model, point);
+                            board[i][j].add(barrier);
+                            sprites.add(barrier);
+                            break;
+
                         default:
                             break;
                     }
