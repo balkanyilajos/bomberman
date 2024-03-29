@@ -34,7 +34,7 @@ public class Barrier extends Sprite {
         elapsedTime = 0;
         eliminationIndex = 0;
         elimination = new ArrayList<>();
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i <= 8; i++) {
             try {
                 elimination.add(ImageIO.read(new File("src/data/picture/barrier/" + i + ".png")));
             } catch (IOException e) {
