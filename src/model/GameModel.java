@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 import javax.swing.Timer;
 
-import gui.game.GameWindow;
+import gui.GameWindow;
 import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
@@ -41,17 +41,15 @@ public class GameModel {
     private long previousTime;
     // private int gameOverCooldownSeconds;
 
-    public GameModel(GameWindow window) {
+    public GameModel() {
         previousTime = System.nanoTime();
-        this.window = window;
+        window = new GameWindow(this);
         sprites = new HashSet<>();
-    }
-
-    public void init(Dimension boardSize) {
-        this.boardSize = boardSize;
         fileReader(MAPS_PATH[0]);
         createTimer();
         timer.start();
+
+        window.setVisible(true);
     }
 
     public void setBoardSize(int width, int height) {
