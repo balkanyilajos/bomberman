@@ -10,23 +10,20 @@ import java.util.HashSet;
 
 import javax.swing.Timer;
 
-import gui.GameWindow;
+import gui.game.GameWindow;
 import model.sprite.Sprite;
-import model.sprite.fixedelement.Barrier;
-import model.sprite.fixedelement.Box;
-import model.sprite.fixedelement.Wall;
-import model.sprite.weapon.Bomb;
 
 public class GameModel {
-    private final String[] MAPS_PATH = {
-            "src/data/map/1.txt"
+    public static final String[] MAPS_PATH = {
+            "src/data/map/1.txt",
+            "src/data/map/2.txt",
+            "src/data/map/3.txt"
     };
 
     private final GameWindow window;
+    private String actualMapPath;
     private ArrayList<Sprite>[][] board;
     private HashSet<Sprite> sprites;
-    private int boardCols;
-    private int boardRows;
 
     // private int rounds;
     // private int roundsCounter;
@@ -35,110 +32,67 @@ public class GameModel {
     // private int[] playerPoints;
 
     private Dimension cubeSize;
-    private Dimension boardSize;
+    private Dimension boardIndexSize;
+    private Dimension boardPixelSize;
 
     private Timer timer;
     private long previousTime;
     // private int gameOverCooldownSeconds;
 
-    public GameModel() {
-        previousTime = System.nanoTime();
-        window = new GameWindow(this);
-        sprites = new HashSet<>();
-        fileReader(MAPS_PATH[0]);
+    public GameModel(GameWindow window, String mapPath) {
+        this.window = window;
+        init(mapPath);
+    }
+
+    public void init(String mapPath) {
+        this.actualMapPath = mapPath;
+        this.previousTime = System.nanoTime();
+        this.sprites = new HashSet<>();
         createTimer();
+
+        try {
+            this.boardIndexSize = MapReader.getBoardIndexSize(mapPath);
+        }
+        catch(FileNotFoundException e) {
+            System.out.println(e);
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void start(Dimension cubeSize) {
+        this.cubeSize = cubeSize;
+        this.boardPixelSize = new Dimension(cubeSize.width*boardIndexSize.width, cubeSize.height*boardIndexSize.height);
+        try {
+            MapReader mr = new MapReader(actualMapPath, this, cubeSize);
+            board = mr.getBoard();
+            sprites = mr.getSprites();
+        }
+        catch(FileNotFoundException e) {
+            System.out.println(e);
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+
         timer.start();
-
-        window.setVisible(true);
     }
 
-    public void setBoardSize(int width, int height) {
-        this.boardSize = new Dimension(width, height);
-    }
-
-    private void setCubeSize(int numberOfCols, int numberOfRows) {
-        this.cubeSize = new Dimension((int)Math.ceil(boardSize.getWidth()/numberOfCols), (int)Math.ceil(boardSize.getHeight()/numberOfRows));
+    public void setCubeSize(Dimension cubeSize) {
+        this.cubeSize = cubeSize;
     }
 
     public Dimension getCubeSize() {
         return (Dimension)cubeSize.clone();
     }
 
-    private void initboard(int numberOfCols, int numberOfRows) {
-        boardCols = numberOfCols;
-        boardRows = numberOfRows;
-        for(int i = 0; i < numberOfRows; i++) {
-            for(int j = 0; j < numberOfCols; j++) {
-                board[i][j] = new ArrayList<Sprite>();
-            }
-        }
+    public Dimension getBoardIndexSize() {
+        return (Dimension)boardIndexSize.clone();
     }
 
-    @SuppressWarnings("unchecked")
-    private void fileReader(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line = br.readLine();
-            String[] tokens = line.split(" ");
-            int numberOfRows = Integer.parseInt(tokens[1]);
-            int numberOfCols = Integer.parseInt(tokens[0]);
-            setCubeSize(numberOfCols, numberOfRows);
-            board = new ArrayList[numberOfRows][numberOfCols];
-            initboard(numberOfCols, numberOfRows);
-
-            for(int i = 0; i < numberOfRows; i++) {
-                line = br.readLine();
-                tokens = line.split(" ");
-                for(int j = 0; j < numberOfCols; j++) {
-                    Point2D startPoint = new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight());
-                    switch (tokens[j]) {
-                        case "X":
-                            Wall wall = new Wall(this, startPoint);
-                            board[i][j].add(wall);
-                            sprites.add(wall);
-                            break;
-                    
-                        case "O":
-                            Bomb bomb = new Bomb(this, startPoint, 2 * this.cubeSize.getWidth(), 3);
-                            board[i][j].add(bomb);
-                            sprites.add(bomb);
-                            break;
-                        
-                        case "N":
-                            Box box = new Box(this, startPoint);
-                            board[i][j].add(box);
-                            sprites.add(box);
-                            break;
-                        
-                        case "B":
-                            Barrier barrier = new Barrier(this, startPoint);
-                            board[i][j].add(barrier);
-                            sprites.add(barrier);
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-            // Bomb b = new Bomb(this, new Point2D.Double(5*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            // board[5][5].add(b);
-            // sprites.add(b);
-            // b = new Bomb(this, new Point2D.Double(3*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            // board[5][3].add(b);
-            // sprites.add(b);
-            // b = new Bomb(this, new Point2D.Double(1*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            // board[5][1].add(b);
-            // sprites.add(b);
-            // b = new Bomb(this, new Point2D.Double(7*cubeSize.getWidth(), 5*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            // board[5][7].add(b);
-            // sprites.add(b);
-        } 
-        catch (FileNotFoundException e) {
-            System.out.println(e);
-        } 
-        catch (IOException e) {
-            System.out.println(e);
-        }
+    public Dimension getBoardPixelSize() {
+        return (Dimension)boardPixelSize.clone();
     }
 
     private void createTimer() {
@@ -179,13 +133,12 @@ public class GameModel {
 
     public HashSet<Sprite> getBoardSprites(Point2D coord, double pixelRadius) {
         HashSet<Sprite> returnSprites = new HashSet<>();
-
         Point pointIndex = getIndexFromCoords(coord);
         Point pixelRadiusIndex = getIndexFromCoords(new Point2D.Double(pixelRadius, pixelRadius));
-        int startColIndex = (pointIndex.getX() - pixelRadiusIndex.getX() >= 0) ? (int)(pointIndex.getX() - pixelRadiusIndex.getX()) : 0;
-        int endColIndex = (pointIndex.getX() + pixelRadiusIndex.getX() <  boardCols) ? (int)(pointIndex.getX() + pixelRadiusIndex.getX()) : boardCols-1;
-        int startRowIndex = (pointIndex.getY() - pixelRadiusIndex.getY() >= 0) ? (int)(pointIndex.getY() - pixelRadiusIndex.getY()) : 0;
-        int endRowIndex = (pointIndex.getY() + pixelRadiusIndex.getY() <  boardCols) ? (int)(pointIndex.getY() + pixelRadiusIndex.getY()) : boardRows-1;
+        int startColIndex = (pointIndex.x - pixelRadiusIndex.x >= 0) ? (int)(pointIndex.x - pixelRadiusIndex.x) : 0;
+        int endColIndex = (pointIndex.x + pixelRadiusIndex.x <  board[0].length) ? (int)(pointIndex.x + pixelRadiusIndex.x) : board[0].length-1;
+        int startRowIndex = (pointIndex.y - pixelRadiusIndex.y >= 0) ? (int)(pointIndex.y - pixelRadiusIndex.y) : 0;
+        int endRowIndex = (pointIndex.y + pixelRadiusIndex.y <  board.length) ? (int)(pointIndex.y + pixelRadiusIndex.y) : board.length-1;
 
         for(int i = startRowIndex; i <= endRowIndex; i++) {
             for(int j = startColIndex; j <= endColIndex; j++) {
@@ -194,7 +147,7 @@ public class GameModel {
                 }
             }
         }
-        
+
         return returnSprites;
     }
 

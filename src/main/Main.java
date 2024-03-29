@@ -1,11 +1,12 @@
 package main;
 
-import model.GameModel;
+import gui.start.StartWindow;
 
 public class Main {
 
     public static void main(String[] args) {
-        new GameModel();
+        StartWindow window = new StartWindow();
+        window.setVisible(true);
     }
     
 }
