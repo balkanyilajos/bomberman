@@ -135,7 +135,7 @@ public class MapSettingPanel extends JPanel {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentPanel.getWindow().startGame(GameModel.MAPS_PATH[0]);
+                parentPanel.getWindow().startGame(GameModel.MAPS_PATH[2]);
             }
         });
     }
