@@ -32,7 +32,10 @@ public class GamePanel extends JPanel {
 
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         calculateBackground();
-        Dimension maximumBoardSize = new Dimension(screenSize.width, (int)(screenSize.height*0.8));
+        
+        int menuPanelHeight = 50;
+        double contentPercentage = 0.9;
+        Dimension maximumBoardSize = new Dimension((int)(screenSize.width*contentPercentage), (int)(screenSize.height*contentPercentage-menuPanelHeight));
         Dimension boardIndexSize = gameModel.getBoardIndexSize();
         gameModel.start(calculateCubeSize(maximumBoardSize, boardIndexSize));
         GridBagConstraints gbc = new GridBagConstraints();

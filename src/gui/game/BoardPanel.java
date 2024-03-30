@@ -15,12 +15,12 @@ import model.sprite.Sprite;
 
 public class BoardPanel extends JPanel {
     private GameModel gameModel;
-    private Dimension dimension;
+    private Dimension pixelSize;
     private Image grass;
 
     public BoardPanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        this.dimension = gameModel.getBoardPixelSize();
+        this.pixelSize = gameModel.getBoardPixelSize();
         try {
             this.grass = ImageIO.read(new File("src/data/picture/grass.jpg"));
         }
@@ -28,22 +28,16 @@ public class BoardPanel extends JPanel {
             System.out.println(e);
         }
         
-        setPreferredSize(dimension);
-        //dimension = new Dimension(600, 600);
-        //gameModel.init((Dimension)dimension.clone());
+        setPreferredSize(pixelSize);
     }
 
     private void createBackground(Graphics graphics) {
-        Dimension grassDimension = new Dimension((int)(dimension.getWidth()/10), (int)(dimension.getHeight()/10));
+        Dimension grassSize = gameModel.getCubeSize();
         
-        double width = 0;
-        while(width < dimension.getWidth()) {
-            double height = 0;
-            while(height < dimension.getHeight()) {
-                graphics.drawImage(grass, (int)width, (int)height, (int)grassDimension.getWidth(), (int)grassDimension.getHeight(), null);
-                height += grassDimension.getHeight();
+        for(int x = 0; x < pixelSize.width; x += grassSize.width) {
+            for(int y = 0; y < pixelSize.height; y += grassSize.height) {
+                graphics.drawImage(grass, x, y, grassSize.width, grassSize.height, null);
             }
-            width += grassDimension.getWidth();
         }
     }
 
