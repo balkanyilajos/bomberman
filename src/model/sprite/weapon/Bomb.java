@@ -15,6 +15,7 @@ import model.util.Action;
 
 public class Bomb extends Sprite {
     private double radius;
+    private int radiusIndex;
     private Dimension size;
 
     private boolean isDestroyed;
@@ -61,6 +62,7 @@ public class Bomb extends Sprite {
         this.explosionSeconds = explosionSeconds;
         this.flameSeconds = flameSeconds;
         this.elapsedTime = 0;
+        this.radiusIndex = (int)(radius / model.getCubeSize().width);
     }
 
     public boolean isDistroyed() {
@@ -91,7 +93,7 @@ public class Bomb extends Sprite {
     @Override
     public void destructor() {
         isDestroyed = true;
-        int addPixel = 15;
+        int addPixel = (int)(model.getCubeSize().width * 0.3);
         HashSet<Sprite> sprites = model.getBoardSprites(areaPoint, radius);
         sprites.remove(this);
 
@@ -108,7 +110,8 @@ public class Bomb extends Sprite {
             if(elapsedTime >= flameSeconds) {
                 elapsedTime -= flameSeconds;
                 if(bombAction.any()) {
-                    flameSeconds *= 1.08;
+                    // the explosion slows down
+                    flameSeconds *= 1 + 0.3/radiusIndex;
                     destructor();
                 }
                 else {
