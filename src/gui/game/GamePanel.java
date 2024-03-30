@@ -56,15 +56,13 @@ public class GamePanel extends JPanel {
         int width = background.getWidth(this);
         int height = background.getHeight(this);
         double ratio = width / height;
+        backgroundPoint = new Point(0, 0);
 
         if ((double) screenSize.width / screenSize.height < ratio) {
-            int newWidth = (int)(screenSize.height * ratio);
-            backgroundSize = new Dimension(newWidth, screenSize.height);
-            backgroundPoint = new Point((width - newWidth) / 2, 0);
+            backgroundSize = new Dimension(screenSize.height * width / height, screenSize.height);
         } else {
-            int newHeight = screenSize.width * height / width;
-            backgroundSize = new Dimension(screenSize.width, newHeight);
-            backgroundPoint = new Point(0, (height - newHeight) / 2);
+            backgroundSize = new Dimension(screenSize.width, screenSize.width * height / width);
+            
         }
     }
 
