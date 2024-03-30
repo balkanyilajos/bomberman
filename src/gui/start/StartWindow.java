@@ -12,8 +12,8 @@ public class StartWindow extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public void startGame(String mapPath) {
-        GameWindow gameWindow = new GameWindow(mapPath);
+    public void startGame(String mapPath, int playerNumber, int wonRoundNumber) {
+        GameWindow gameWindow = new GameWindow(mapPath, playerNumber, wonRoundNumber);
         gameWindow.setVisible(true);
         dispose();
     }

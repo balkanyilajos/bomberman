@@ -8,7 +8,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -18,9 +17,9 @@ import model.GameModel;
 
 public class MapSettingPanel extends JPanel {
     private StartPanel parentPanel;
-    private int numberOfPlayers;
-    private int numberOfWonRounds;
-    private String pathOfMap;
+    private Integer playerNumber;
+    private Integer wonRoundNumber;
+    private String mapPath;
 
     public MapSettingPanel(StartPanel parentPanel) {
         setLayout(new GridBagLayout());
@@ -29,12 +28,33 @@ public class MapSettingPanel extends JPanel {
 
         int smallButtonWidth = 60;
         int bigButtonSize = 2 * smallButtonWidth;
+
+        GameTextButton[] playerNumberGroup = {
+            createPlayerRadioButton("2", smallButtonWidth, 2),
+            createPlayerRadioButton("3", smallButtonWidth, 3)
+        };
+
+        GameTextButton[] roundGroup = {
+            createRoundsRadioButton("1", smallButtonWidth, 1),
+            createRoundsRadioButton("2", smallButtonWidth, 2),
+            createRoundsRadioButton("5", smallButtonWidth, 5)
+        };
+
+        GameImageButton[] mapGroup = {
+            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[0], bigButtonSize, bigButtonSize),
+            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[1], bigButtonSize, bigButtonSize),
+            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[2], bigButtonSize, bigButtonSize)
+        };
+
+        for(GameTextButton button : playerNumberGroup) button.setButtonGroup(playerNumberGroup);
+        for(GameTextButton button : roundGroup) button.setButtonGroup(roundGroup);
+        for(GameImageButton button : mapGroup) button.setButtonGroup(mapGroup);
+
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
-
         JPanel transparentPanel = new JPanel();
         transparentPanel.setBackground(new Color(0, 0, 0, 0));
         transparentPanel.setPreferredSize(new Dimension(1, 100));
@@ -46,10 +66,10 @@ public class MapSettingPanel extends JPanel {
 
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridx = 1;
-        add(createPlayerButton("2", smallButtonWidth, 2), gbc);
+        add(playerNumberGroup[0], gbc);
 
         gbc.gridx = 2;
-        add(createPlayerButton("3", smallButtonWidth, 3), gbc);
+        add(playerNumberGroup[1], gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -58,23 +78,23 @@ public class MapSettingPanel extends JPanel {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(createRoundsButton("1", smallButtonWidth, 1), gbc);
+        add(roundGroup[0], gbc);
 
         gbc.gridx = 2;
-        add(createRoundsButton("2", smallButtonWidth, 2), gbc);
+        add(roundGroup[1], gbc);
 
         gbc.gridx = 3;
-        add(createRoundsButton("5", smallButtonWidth, 5), gbc);
+        add(roundGroup[2], gbc);
 
         gbc.gridy = 3;
         gbc.gridx = 1;
-        add(createMapButton("src/data/picture/wall.png", bigButtonSize, bigButtonSize), gbc);
+        add(mapGroup[0], gbc);
 
         gbc.gridx = 2;
-        add(createMapButton("src/data/picture/wall.png", bigButtonSize, bigButtonSize), gbc);
+        add(mapGroup[1], gbc);
 
         gbc.gridx = 3;
-        add(createMapButton("src/data/picture/wall.png", bigButtonSize, bigButtonSize), gbc);
+        add(mapGroup[2], gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 4;
@@ -82,8 +102,7 @@ public class MapSettingPanel extends JPanel {
 
         gbc.gridx = 2;
         add(createStartButton("Start Game", bigButtonSize), gbc);
-        
-
+        gbc.gridx = 3;
     }
 
     private JLabel createTitle(String title) {
@@ -95,34 +114,34 @@ public class MapSettingPanel extends JPanel {
         return label;
     }
 
-    private JButton createPlayerButton(String text, int width, int players) {
-        return new GameTextButton(text, width, new ActionListener() {
+    private GameTextButton createPlayerRadioButton(String text, int width, int players) {
+        return new GameTextButton(text, width, true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberOfPlayers = players;
+                playerNumber = players;
             }
         });
     }
 
-    private JButton createRoundsButton(String text, int width, int wonRounds) {
-        return new GameTextButton(text, width, new ActionListener() {
+    private GameTextButton createRoundsRadioButton(String text, int width, int wonRounds) {
+        return new GameTextButton(text, width, true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberOfWonRounds = wonRounds;
+                wonRoundNumber = wonRounds;
             }
         });
     }
 
-    private JButton createMapButton(String imagePath, int width, int height) {
-        return new GameImageButton(imagePath, width, height, new ActionListener() {
+    private GameImageButton createMapRadioButton(String imagePath, String mapPath, int width, int height) {
+        return new GameImageButton(imagePath, width, height, true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                pathOfMap = imagePath;
+                MapSettingPanel.this.mapPath = mapPath;
             }
         });
     }
 
-    private JButton createBackButton(String text, int width) {
+    private GameTextButton createBackButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,11 +150,13 @@ public class MapSettingPanel extends JPanel {
         });
     }
 
-    private JButton createStartButton(String text, int width) {
+    private GameTextButton createStartButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentPanel.getWindow().startGame(GameModel.MAPS_PATH[2]);
+                if(playerNumber != null && wonRoundNumber != null && mapPath != null) {
+                    parentPanel.getWindow().startGame(mapPath, playerNumber, wonRoundNumber);
+                }
             }
         });
     }
