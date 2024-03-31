@@ -29,6 +29,7 @@ public class BoardPanel extends JPanel {
         }
         
         setPreferredSize(pixelSize);
+        setMinimumSize(pixelSize);
     }
 
     private void createBackground(Graphics graphics) {
