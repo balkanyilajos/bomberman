@@ -25,7 +25,11 @@ public class GameModel {
     };
 
     private final GameWindow window;
-    private String actualMapPath;
+
+    private String MapPath;
+    private int playerNumber;
+    private int wonRoundNumber;
+
     private ArrayList<Sprite>[][] board;
     private HashSet<Sprite> sprites;
 
@@ -43,13 +47,15 @@ public class GameModel {
     private long previousTime;
     // private int gameOverCooldownSeconds;
 
-    public GameModel(GameWindow window, String mapPath) {
+    public GameModel(GameWindow window, String mapPath, int playerNumber, int wonRoundNumber) {
         this.window = window;
-        init(mapPath);
+        init(mapPath, playerNumber, wonRoundNumber);
     }
 
-    public void init(String mapPath) {
-        this.actualMapPath = mapPath;
+    public void init(String mapPath, int playerNumber, int wonRoundNumber) {
+        this.MapPath = mapPath;
+        this.playerNumber = playerNumber;
+        this.wonRoundNumber = wonRoundNumber;
         this.previousTime = System.nanoTime();
         this.sprites = new HashSet<>();
         createTimer();
@@ -68,7 +74,7 @@ public class GameModel {
         this.boardPixelSize = new Dimension(cubeSize.width * boardIndexSize.width,
                 cubeSize.height * boardIndexSize.height);
         try {
-            MapReader mr = new MapReader(actualMapPath, this, cubeSize);
+            MapReader mr = new MapReader(MapPath, this, cubeSize);
             board = mr.getBoard();
             sprites = mr.getSprites();
         } catch (FileNotFoundException e) {

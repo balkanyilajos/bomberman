@@ -1,5 +1,6 @@
 package gui.start;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
@@ -9,6 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class StartPanel extends JPanel {
     private Image background;
@@ -30,6 +32,9 @@ public class StartPanel extends JPanel {
         } catch (IOException e) {
             System.out.println(e);
         }
+
+        // turn off active buttons' color
+        UIManager.put("Button.select", new Color(0, 0, 0, 0));
 
         add(mapSettingPanel);
         add(startGamePanel);
