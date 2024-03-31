@@ -3,6 +3,8 @@ package model.sprite.moveable;
 import gui.game.BoardPanel;
 import model.GameModel;
 import model.sprite.Sprite;
+import model.util.Action;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,16 +15,18 @@ import java.io.IOException;
 
 public abstract class MoveableSprite extends Sprite {
 
-    public MoveableSprite(GameModel model, Area area, Point2D imagePoint, Point2D areaPoint, Dimension imageSize,
+    protected Action action;
+    protected int speed;
+
+    public MoveableSprite(GameModel model, Area area, Action action, int speed, Point2D imagePoint, Point2D areaPoint,
+            Dimension imageSize,
             String imagePath) {
         super(model, area, imagePoint, areaPoint, imageSize, imagePath);
+        this.action = action;
+        this.speed = speed;
     }
 
-    protected abstract void moveUp(double deltaTime);
+    protected abstract void move(double deltaTime);
 
-    protected abstract void moveDown(double deltaTime);
-
-    protected abstract void moveLeft(double deltaTime);
-
-    protected abstract void moveRight(double deltaTime);
+    protected abstract boolean isMoveable(Point2D point);
 }

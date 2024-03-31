@@ -10,6 +10,9 @@ import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
 import model.sprite.weapon.Bomb;
+import model.util.Action;
+import model.util.PlayerAction;
+
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -30,11 +33,19 @@ public class Player extends MoveableSprite {
     private double sizeOfExplosion;
     private HashSet<Bomb> bombs;
 
-    public Player(GameModel model, Area area, Point2D imagePoint, Point2D areaPoint, Dimension imageSize,
-            String imagePath, int ExplosionSize) {
+    public Player(GameModel model, Point2D imagePoint, String imagePath) {
 
-        super(model, area, imagePoint, areaPoint, imageSize, imagePath);
-        sizeOfExplosion = ExplosionSize;
+        super(model, null, null, 0, imagePoint, null, model.getCubeSize(), imagePath);
+        this.action = new PlayerAction();
+    }
+
+    private Player(GameModel model, Area area, PlayerAction action, Point2D imagePoint, Point2D areaPoint,
+            Dimension imageSize,
+            String imagePath, int speed) {
+        super(model, null, action, speed, imagePoint, areaPoint, imageSize, imagePath);
+        this.area = new Area(new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
+                imageSize.getHeight()));
+        this.sizeOfExplosion = 3;
     }
 
     public void setInvulnerability(double secTime) {
@@ -67,7 +78,7 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         numberOfBombs--;
-        Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 1);
+        Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 2);
         bombs.add(bomb);
     }
 
@@ -89,22 +100,56 @@ public class Player extends MoveableSprite {
     }
 
     @Override
-    public void moveUp(double deltaTime) {
+    public void move(double deltaTime) {
+        double division = 1;
+        if (action.up && action.left || action.up && action.right || action.down && action.left
+                || action.down && action.right) {
+            division = Math.sqrt(2);
+        }
 
+        if (action.up) {
+            Point2D newPoint = new Point2D.Double(areaPoint.getX(), areaPoint.getY() - deltaTime * speed / division);
+            if (isMoveable(newPoint)) {
+                areaPoint = newPoint; // új area és imagePoint létrehozása
+            }
+        }
+
+        if (action.down) {
+            Point2D newPoint = new Point2D.Double(areaPoint.getX(), areaPoint.getY() + deltaTime * speed / division);
+            if (isMoveable(newPoint)) {
+                areaPoint = newPoint; // új area és imagePoint létrehozása
+            }
+        }
+
+        if (action.left) {
+            Point2D newPoint = new Point2D.Double(areaPoint.getX() + deltaTime * speed / division, areaPoint.getY());
+            if (isMoveable(newPoint)) {
+                areaPoint = newPoint; // új area és imagePoint létrehozása
+            }
+        }
+
+        if (action.right) {
+            Point2D newPoint = new Point2D.Double(areaPoint.getX() - deltaTime * speed / division, areaPoint.getY());
+            if (isMoveable(newPoint)) {
+                areaPoint = newPoint; // új area és imagePoint létrehozása
+            }
+        }
     }
 
     @Override
-    public void moveDown(double deltaTime) {
-
+    public boolean isMoveable(Point2D point) {
+        HashSet<Sprite> sprites = model.getBoardSprites(point, 1);
+        for (Sprite sprite : sprites) {
+            if (isIntersect(sprite)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
-    public void moveLeft(double deltaTime) {
-
-    }
-
-    @Override
-    public void moveRight(double deltaTime) {
-
+    public void update(double deltaTime) {
+        move(deltaTime);
+        placeBomb();
     }
 }

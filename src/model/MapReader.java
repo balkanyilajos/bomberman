@@ -1,6 +1,8 @@
 package model;
 
 import java.awt.Dimension;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -13,6 +15,7 @@ import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
+import model.sprite.moveable.player.Player;
 import model.sprite.weapon.Bomb;
 
 public class MapReader {
@@ -64,8 +67,8 @@ public class MapReader {
     @SuppressWarnings("unchecked")
     private void initBoard() {
         board = new ArrayList[boardIndexSize.height][boardIndexSize.width];
-        for(int i = 0; i < boardIndexSize.height; i++) {
-            for(int j = 0; j < boardIndexSize.width; j++) {
+        for (int i = 0; i < boardIndexSize.height; i++) {
+            for (int j = 0; j < boardIndexSize.width; j++) {
                 board[i][j] = new ArrayList<Sprite>();
             }
         }
@@ -82,34 +85,40 @@ public class MapReader {
             initBoard();
 
             // read board elements
-            for(int i = 0; i < boardIndexSize.height; i++) {
+            for (int i = 0; i < boardIndexSize.height; i++) {
                 line = br.readLine();
                 tokens = line.split(" ");
-                for(int j = 0; j < boardIndexSize.width; j++) {
-                    Point2D point = new Point2D.Double(j*cubeSize.getWidth(), i*cubeSize.getHeight());
+                for (int j = 0; j < boardIndexSize.width; j++) {
+                    Point2D point = new Point2D.Double(j * cubeSize.getWidth(), i * cubeSize.getHeight());
                     switch (tokens[j]) {
                         case "X":
                             Wall wall = new Wall(model, point);
                             board[i][j].add(wall);
                             sprites.add(wall);
                             break;
-                    
+
                         case "O":
                             Bomb bomb = new Bomb(model, point, 2 * cubeSize.getWidth(), 3);
                             board[i][j].add(bomb);
                             sprites.add(bomb);
                             break;
-                        
+
                         case "N":
                             Box box = new Box(model, point);
                             board[i][j].add(box);
                             sprites.add(box);
                             break;
-                        
+
                         case "B":
                             Barrier barrier = new Barrier(model, point);
                             board[i][j].add(barrier);
                             sprites.add(barrier);
+                            break;
+
+                        case "P":
+                            Player player = new Player(model, point, "src/data/picture/player/gamer.png");
+                            board[i][j].add(player);
+                            sprites.add(player);
                             break;
 
                         default:
@@ -118,20 +127,29 @@ public class MapReader {
                 }
             }
 
-            Bomb b = new Bomb(model, new Point2D.Double(1*cubeSize.getWidth(), 1*cubeSize.getHeight()), 4 * this.cubeSize.getWidth());
-            board[1][1].add(b);
-            sprites.add(b);
-            b = new Bomb(model, new Point2D.Double(3*cubeSize.getWidth(), 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[1][3].add(b);
-            sprites.add(b);
-            b = new Bomb(model, new Point2D.Double(5*cubeSize.getWidth(), 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            board[1][5].add(b);
-            sprites.add(b);
-            // b = new Bomb(model, new Point2D.Double(7*cubeSize.getWidth(), 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-            // board[5][7].add(b);
-            // sprites.add(b);
-            
+            /*
+             * Bomb b = new Bomb(model, new Point2D.Double(1 * cubeSize.getWidth(), 1 *
+             * cubeSize.getHeight()),
+             * 4 * this.cubeSize.getWidth());
+             * board[1][1].add(b);
+             * sprites.add(b);
+             * b = new Bomb(model, new Point2D.Double(3 * cubeSize.getWidth(), 1 *
+             * cubeSize.getHeight()),
+             * 2 * this.cubeSize.getWidth());
+             * board[1][3].add(b);
+             * sprites.add(b);
+             * b = new Bomb(model, new Point2D.Double(5 * cubeSize.getWidth(), 1 *
+             * cubeSize.getHeight()),
+             * 2 * this.cubeSize.getWidth());
+             * board[1][5].add(b);
+             * sprites.add(b);
+             * // b = new Bomb(model, new Point2D.Double(7*cubeSize.getWidth(),
+             * // 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+             * // board[5][7].add(b);
+             * // sprites.add(b);
+             */
+
         }
-    } 
+    }
 
 }

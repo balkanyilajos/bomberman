@@ -10,12 +10,14 @@ public class GameWindow extends JFrame {
 
     public GameWindow(String mapPath, int playerNumber, int wonRoundNumber) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //setResizable(false);
+        // setResizable(false);
         panel = new GamePanel(new GameModel(this, mapPath, playerNumber, wonRoundNumber));
         add(panel);
         pack();
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // this.addKeyListener(null);
     }
 
     public void repaint() {

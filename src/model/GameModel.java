@@ -83,8 +83,6 @@ public class GameModel {
             System.out.println(e);
         }
 
-        Image gamerImage = new ImageIcon("src/data/picture/gamer.png").getImage();
-
         timer.start();
     }
 
