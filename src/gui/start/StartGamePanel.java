@@ -45,7 +45,7 @@ public class StartGamePanel extends JPanel {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentPanel.getWindow().dispose();
+                System.exit(0);
             }
         });
     }
