@@ -1,9 +1,11 @@
 package gui.game;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,7 @@ public class MenuPanel extends JPanel {
     private DateTimeFormatter timeFormatter;
 
     public MenuPanel(GameModel gameModel) {
+        setLayout(new GridBagLayout());
         this.gameModel = gameModel;
         this.timeFormatter = DateTimeFormatter.ofPattern("mm:ss");
         this.startTime = System.nanoTime();
@@ -29,8 +32,17 @@ public class MenuPanel extends JPanel {
         updateTimerText();
 
         setBackground(Color.GRAY);
-        add(timerText, BorderLayout.CENTER);
-        setPreferredSize(new Dimension(gameModel.getBoardPixelSize().width, getPreferredSize().height));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 20, 5, 20);
+        add(timerText, gbc);
+
+        Dimension pixelSize = new Dimension(gameModel.getBoardPixelSize().width, getPreferredSize().height);
+        setPreferredSize(pixelSize);
+        setMinimumSize(pixelSize);
     }
 
     private void updateTimerText() {
