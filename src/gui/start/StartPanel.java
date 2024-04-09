@@ -19,6 +19,7 @@ public class StartPanel extends JPanel {
 
     private StartGamePanel startGamePanel;
     private MapSettingPanel mapSettingPanel;
+    private KeyboardSettingPanel keyboardSettingPanel;
 
     public StartPanel(StartWindow window) {
         setLayout(new GridBagLayout());
@@ -26,6 +27,7 @@ public class StartPanel extends JPanel {
         this.backgroundSize = new Dimension(880, 560);
         this.startGamePanel = new StartGamePanel(this);
         this.mapSettingPanel = new MapSettingPanel(this);
+        this.keyboardSettingPanel = new KeyboardSettingPanel(this);
 
         try {
             this.background = ImageIO.read(new File("src/data/picture/bomberman-background.png"));
@@ -38,6 +40,7 @@ public class StartPanel extends JPanel {
 
         add(mapSettingPanel);
         add(startGamePanel);
+        add(keyboardSettingPanel);
         goToStartGamePanel();
 
         setPreferredSize(backgroundSize);
@@ -46,12 +49,21 @@ public class StartPanel extends JPanel {
     public void goToMapSettingPanel() {
         startGamePanel.setVisible(false);
         mapSettingPanel.setVisible(true);
+        keyboardSettingPanel.setVisible(false);
         repaint();
     }
 
     public void goToStartGamePanel() {
         startGamePanel.setVisible(true);
         mapSettingPanel.setVisible(false);
+        keyboardSettingPanel.setVisible(false);
+        repaint();
+    }
+
+    public void goToKeyboardSettingPanel() {
+        startGamePanel.setVisible(false);
+        mapSettingPanel.setVisible(false);
+        keyboardSettingPanel.setVisible(true);
         repaint();
     }
 
