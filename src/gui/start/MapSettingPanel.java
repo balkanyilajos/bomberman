@@ -20,6 +20,7 @@ public class MapSettingPanel extends JPanel {
     private Integer playerNumber;
     private Integer wonRoundNumber;
     private String mapPath;
+    private String keyboard;
 
     public MapSettingPanel(StartPanel parentPanel) {
         setLayout(new GridBagLayout());
@@ -40,6 +41,11 @@ public class MapSettingPanel extends JPanel {
             createRoundsRadioButton("5", smallButtonWidth, 5)
         };
 
+        GameTextButton[] keyboardGroup = {
+            createRoundsRadioButton("default", smallButtonWidth, 1),
+            createRoundsRadioButton("custom", smallButtonWidth, 2)
+        };
+
         GameImageButton[] mapGroup = {
             createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[0], bigButtonSize, bigButtonSize),
             createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[1], bigButtonSize, bigButtonSize),
@@ -48,6 +54,7 @@ public class MapSettingPanel extends JPanel {
 
         for(GameTextButton button : playerNumberGroup) button.setButtonGroup(playerNumberGroup);
         for(GameTextButton button : roundGroup) button.setButtonGroup(roundGroup);
+        for(GameTextButton button : keyboardGroup) button.setButtonGroup(keyboardGroup);
         for(GameImageButton button : mapGroup) button.setButtonGroup(mapGroup);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -70,6 +77,20 @@ public class MapSettingPanel extends JPanel {
 
         gbc.gridx = 2;
         add(playerNumberGroup[1], gbc);
+
+        //
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(createTitle("Keyboard setting options"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(createSettingButton("Default", bigButtonSize), gbc);
+
+        gbc.gridx = 2;
+        add(createSettingButton("Custom", bigButtonSize), gbc);
+        //
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -97,7 +118,7 @@ public class MapSettingPanel extends JPanel {
         add(mapGroup[2], gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         add(createBackButton("Back", bigButtonSize), gbc);
 
         gbc.gridx = 2;
@@ -150,11 +171,20 @@ public class MapSettingPanel extends JPanel {
         });
     }
 
+    private GameTextButton createSettingButton(String text, int width) {
+        return new GameTextButton(text, width, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //parentPanel.goToStartGamePanel();
+            }
+        });
+    }
+
     private GameTextButton createStartButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(playerNumber != null && wonRoundNumber != null && mapPath != null) {
+                if(playerNumber != null && wonRoundNumber != null && mapPath != null && keyboard != null) {
                     parentPanel.getWindow().startGame(mapPath, playerNumber, wonRoundNumber);
                 }
             }
