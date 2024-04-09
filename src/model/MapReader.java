@@ -116,9 +116,9 @@ public class MapReader {
                             break;
 
                         case "P":
-                            Player player = new Player(model, point, "src/data/picture/player/gamer.png");
-                            board[i][j].add(player);
-                            sprites.add(player);
+                            Player player1 = new Player(model, point, "src/data/picture/player/gamer.png");
+                            board[i][j].add(player1);
+                            sprites.add(player1);
                             break;
 
                         default:

@@ -35,8 +35,12 @@ public class Player extends MoveableSprite {
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
 
-        super(model, null, null, 0, imagePoint, null, model.getCubeSize(), imagePath);
+        super(model, new Area(new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), model.getCubeSize().getWidth(),
+                model.getCubeSize().getHeight())), null, 100, imagePoint, null, model.getCubeSize(), imagePath);
         this.action = new PlayerAction();
+        this.areaPoint = new Point2D.Double(imagePoint.getX() + model.getCubeSize().getWidth() * 0.1,
+                imagePoint.getY() + model.getCubeSize().getHeight() * 0.1);
+        action.up = true;
     }
 
     private Player(GameModel model, Area area, PlayerAction action, Point2D imagePoint, Point2D areaPoint,
@@ -46,6 +50,10 @@ public class Player extends MoveableSprite {
         this.area = new Area(new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
                 imageSize.getHeight()));
         this.sizeOfExplosion = 3;
+    }
+
+    public void setUp() {
+        action.up = true;
     }
 
     public void setInvulnerability(double secTime) {
@@ -78,8 +86,8 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         numberOfBombs--;
-        Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 2);
-        bombs.add(bomb);
+        // Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 2);
+        // bombs.add(bomb);
     }
 
     public void increaseNumberOfBombs(int numberOfNewBombs) {
@@ -108,16 +116,31 @@ public class Player extends MoveableSprite {
         }
 
         if (action.up) {
-            Point2D newPoint = new Point2D.Double(areaPoint.getX(), areaPoint.getY() - deltaTime * speed / division);
-            if (isMoveable(newPoint)) {
-                areaPoint = newPoint; // új area és imagePoint létrehozása
+            Point2D newAreaPoint = new Point2D.Double(areaPoint.getX(),
+                    areaPoint.getY() - deltaTime * speed / division);
+            Point2D newImagePoint = new Point2D.Double(imagePoint.getX(),
+                    imagePoint.getY() - deltaTime * speed / division);
+            Area newArea = new Area(
+                    new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), model.getCubeSize().getWidth(),
+                            model.getCubeSize().getHeight()));
+            if (isMoveable(newAreaPoint)) {
+                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
+            }
+
+            if (isMoveable(newImagePoint)) {
+                imagePoint = newImagePoint;
+            }
+
+            if (!isIntersect(newArea)) {
+                area = newArea;
             }
         }
 
         if (action.down) {
-            Point2D newPoint = new Point2D.Double(areaPoint.getX(), areaPoint.getY() + deltaTime * speed / division);
-            if (isMoveable(newPoint)) {
-                areaPoint = newPoint; // új area és imagePoint létrehozása
+            Point2D newAreaPoint = new Point2D.Double(areaPoint.getX(),
+                    areaPoint.getY() + deltaTime * speed / division);
+            if (isMoveable(newAreaPoint)) {
+                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
             }
         }
 

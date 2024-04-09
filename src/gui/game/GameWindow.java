@@ -17,7 +17,7 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // this.addKeyListener(null);
+        this.addKeyListener(new MainKeyListener());
     }
 
     public void repaint() {
