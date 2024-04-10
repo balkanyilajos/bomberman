@@ -60,17 +60,17 @@ public class StartPanel extends JPanel {
         repaint();
     }
 
-    public void goToKeyboardSettingPanel() {
+    public void goToKeyboardSettingPanel(int playerNumber, boolean def) {
         startGamePanel.setVisible(false);
         mapSettingPanel.setVisible(false);
         keyboardSettingPanel.setVisible(true);
+        keyboardSettingPanel.setPlayerNumber(playerNumber, def);
         repaint();
     }
 
     public void forwardToKeyboardSettingPanel(int keyCode)
     {
         char c = (char)keyCode;
-        System.out.println("|"+c);
         keyboardSettingPanel.modifyKeySetting(keyCode);
     }
 

@@ -42,8 +42,8 @@ public class MapSettingPanel extends JPanel {
         };
 
         GameTextButton[] keyboardGroup = {
-            createRoundsRadioButton("default", smallButtonWidth, 1),
-            createRoundsRadioButton("custom", smallButtonWidth, 2)
+            createSettingButton("Default", bigButtonSize, true),
+            createSettingButton("Custom", bigButtonSize, false)
         };
 
         GameImageButton[] mapGroup = {
@@ -86,10 +86,10 @@ public class MapSettingPanel extends JPanel {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(createSettingButton("Default", bigButtonSize), gbc);
+        add(keyboardGroup[0], gbc);
 
         gbc.gridx = 2;
-        add(createSettingButton("Custom", bigButtonSize), gbc);
+        add(keyboardGroup[1], gbc);
         //
 
         gbc.gridx = 0;
@@ -171,11 +171,12 @@ public class MapSettingPanel extends JPanel {
         });
     }
 
-    private GameTextButton createSettingButton(String text, int width) {
-        return new GameTextButton(text, width, new ActionListener() {
+    private GameTextButton createSettingButton(String text, int width, boolean def) {
+        return new GameTextButton(text, width, true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentPanel.goToKeyboardSettingPanel();
+                if(playerNumber != null)
+                { parentPanel.goToKeyboardSettingPanel(playerNumber, def); }
             }
         });
     }
