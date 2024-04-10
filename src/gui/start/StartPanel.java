@@ -67,6 +67,13 @@ public class StartPanel extends JPanel {
         repaint();
     }
 
+    public void forwardToKeyboardSettingPanel(int keyCode)
+    {
+        char c = (char)keyCode;
+        System.out.println("|"+c);
+        keyboardSettingPanel.modifyKeySetting(keyCode);
+    }
+
     public StartWindow getWindow() {
         return window;
     }
