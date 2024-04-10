@@ -139,29 +139,15 @@ public class KeyboardSettingPanel extends JPanel
     }
 
     private GameTextButton createRoundsRadioButton(String text, int width, int i) {
-        GameTextButton gameTextButton = new GameTextButton(text, width, true, null);
-        ActionListener al = new ActionListener() {
+        return new GameTextButton(text, width, true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*
-                int[] array = i < 5 ? p1 : i < 10 ? p2 : p3;
-                int index = i%5;
-                char c = (char)array[index];
-                String text = ""+c;
-                System.out.println(text);
-                gameTextButton.setText(""+c);
-                */
-               System.out.println(":::");
                selectedIndex = i;
-            }
+            }});
         };
-        gameTextButton.addActionListener(al);
-        return gameTextButton;
-    }
-
     public void modifyKeySetting(int keyCode)
     {
-        if(selectedIndex >= 0)
+        if(selectedIndex >= 0 && (keyCode != 0 && keyCode != 16 && keyCode != 17 && keyCode != 18 && keyCode != 20 && keyCode != 524 && keyCode != 525))
         {
             int[] array = selectedIndex < 5 ? p1 : selectedIndex < 10 ? p2 : p3;
             int index = selectedIndex%array.length;
