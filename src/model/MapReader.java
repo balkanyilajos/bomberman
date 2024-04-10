@@ -127,27 +127,22 @@ public class MapReader {
                 }
             }
 
-            /*
-             * Bomb b = new Bomb(model, new Point2D.Double(1 * cubeSize.getWidth(), 1 *
-             * cubeSize.getHeight()),
-             * 4 * this.cubeSize.getWidth());
-             * board[1][1].add(b);
-             * sprites.add(b);
-             * b = new Bomb(model, new Point2D.Double(3 * cubeSize.getWidth(), 1 *
-             * cubeSize.getHeight()),
-             * 2 * this.cubeSize.getWidth());
-             * board[1][3].add(b);
-             * sprites.add(b);
-             * b = new Bomb(model, new Point2D.Double(5 * cubeSize.getWidth(), 1 *
-             * cubeSize.getHeight()),
-             * 2 * this.cubeSize.getWidth());
-             * board[1][5].add(b);
-             * sprites.add(b);
-             * // b = new Bomb(model, new Point2D.Double(7*cubeSize.getWidth(),
-             * // 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
-             * // board[5][7].add(b);
-             * // sprites.add(b);
-             */
+            Bomb b = new Bomb(model, new Point2D.Double(1 * cubeSize.getWidth(), 1 * cubeSize.getHeight()),
+                    4 * this.cubeSize.getWidth());
+            board[1][1].add(b);
+            sprites.add(b);
+            b = new Bomb(model, new Point2D.Double(3 * cubeSize.getWidth(), 1 * cubeSize.getHeight()),
+                    2 * this.cubeSize.getWidth());
+            board[1][3].add(b);
+            sprites.add(b);
+            b = new Bomb(model, new Point2D.Double(5 * cubeSize.getWidth(), 1 * cubeSize.getHeight()),
+                    2 * this.cubeSize.getWidth());
+            board[1][5].add(b);
+            sprites.add(b);
+            // b = new Bomb(model, new Point2D.Double(7*cubeSize.getWidth(),
+            // 1*cubeSize.getHeight()), 2 * this.cubeSize.getWidth());
+            // board[5][7].add(b);
+            // sprites.add(b);
 
         }
     }
