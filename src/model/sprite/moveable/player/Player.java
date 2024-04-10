@@ -3,6 +3,8 @@ package model.sprite.moveable.player;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import model.GameModel;
@@ -35,13 +37,15 @@ public class Player extends MoveableSprite {
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
 
-        super(model, null, null, 70, imagePoint, null, model.getCubeSize(), imagePath);
+        super(model, null, null, 50, imagePoint, null, model.getCubeSize(), imagePath);
         this.action = new PlayerAction();
-        this.areaPoint = new Point2D.Double(imagePoint.getX() + model.getCubeSize().getWidth() * 0.1,
-                imagePoint.getY() + model.getCubeSize().getHeight() * 0.1);
-        this.area = new Area(new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), model.getCubeSize().getWidth(),
-                model.getCubeSize().getHeight()));
-        action.up = true;
+        this.areaPoint = new Point2D.Double(imagePoint.getX(),
+                imagePoint.getY());
+        this.area = new Area(
+                new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                        model.getCubeSize().getWidth() * 0.5,
+                        model.getCubeSize().getHeight()));
+        action.right = true;
     }
 
     private Player(GameModel model, Area area, PlayerAction action, Point2D imagePoint, Point2D areaPoint,
@@ -54,7 +58,7 @@ public class Player extends MoveableSprite {
     }
 
     public void setUpTrue() {
-        action.up = true;
+        action.right = true;
     }
 
     public void setInvulnerability(double secTime) {
@@ -110,6 +114,7 @@ public class Player extends MoveableSprite {
 
     @Override
     public void move(double deltaTime) {
+        // deleteSpriteFromBoard(this);
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
@@ -122,10 +127,11 @@ public class Player extends MoveableSprite {
             Point2D newImagePoint = new Point2D.Double(imagePoint.getX(),
                     imagePoint.getY() - deltaTime * speed / division);
             Area newArea = new Area(
-                    new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), model.getCubeSize().getWidth() * 1.2,
-                            model.getCubeSize().getHeight() * 1.2));
+                    new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                            model.getCubeSize().getWidth() * 0.5,
+                            model.getCubeSize().getHeight()));
             if (isMoveable(newAreaPoint)) {
-                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
+                areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
                 area = newArea;
             }
@@ -137,10 +143,11 @@ public class Player extends MoveableSprite {
             Point2D newImagePoint = new Point2D.Double(imagePoint.getX(),
                     imagePoint.getY() + deltaTime * speed / division);
             Area newArea = new Area(
-                    new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), model.getCubeSize().getWidth() * 1.2,
-                            model.getCubeSize().getHeight() * 1.2));
+                    new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                            model.getCubeSize().getWidth() * 0.5,
+                            model.getCubeSize().getHeight()));
             if (isMoveable(newAreaPoint)) {
-                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
+                areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
                 area = newArea;
             }
@@ -152,10 +159,11 @@ public class Player extends MoveableSprite {
             Point2D newImagePoint = new Point2D.Double(imagePoint.getX() - deltaTime * speed / division,
                     imagePoint.getY());
             Area newArea = new Area(
-                    new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), model.getCubeSize().getWidth() * 1.2,
-                            model.getCubeSize().getHeight() * 1.2));
+                    new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                            model.getCubeSize().getWidth() * 0.5,
+                            model.getCubeSize().getHeight()));
             if (isMoveable(newAreaPoint)) {
-                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
+                areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
                 area = newArea;
             }
@@ -167,19 +175,22 @@ public class Player extends MoveableSprite {
             Point2D newImagePoint = new Point2D.Double(imagePoint.getX() + deltaTime * speed / division,
                     imagePoint.getY());
             Area newArea = new Area(
-                    new Ellipse2D.Double(areaPoint.getX(), areaPoint.getY(), model.getCubeSize().getWidth() * 1.2,
-                            model.getCubeSize().getHeight() * 1.2));
+                    new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                            model.getCubeSize().getWidth() * 0.5,
+                            model.getCubeSize().getHeight()));
             if (isMoveable(newAreaPoint)) {
-                areaPoint = newAreaPoint; // új area és imagePoint létrehozása
+                areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
                 area = newArea;
             }
         }
+        // addSpriteToBoard(this);
     }
 
     @Override
     public boolean isMoveable(Point2D point) {
-        HashSet<Sprite> sprites = model.getBoardSprites(point, 1);
+        HashSet<Sprite> sprites = model.getBoardSprites(point, model.getCubeSize().getWidth());
+        sprites.remove(this);
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite)) {
                 return false;
@@ -192,5 +203,12 @@ public class Player extends MoveableSprite {
     public void update(double deltaTime) {
         move(deltaTime);
         placeBomb();
+    }
+
+    @Override
+    public void draw(Graphics graphics) {
+        super.draw(graphics);
+        Graphics2D gr = (Graphics2D) graphics;
+        gr.fill(area);
     }
 }
