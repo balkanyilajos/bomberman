@@ -20,13 +20,28 @@ public class GameWindow extends JFrame {
 
     public GameWindow(String mapPath, int playerNumber, int wonRoundNumber) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // setResizable(false);
-        panel = new GamePanel(new GameModel(this, mapPath, playerNumber, wonRoundNumber));
-        add(panel);
+        mainPanel = createMainPanel();
+        menuDialog = new MenuDialog(this);
+        gameField = new GamePanel(new GameModel(this, mapPath, playerNumber, wonRoundNumber));
+        layout = new OverlayLayout(mainPanel);
+        mainPanel.setLayout(layout);
+        add(mainPanel);
+
+        mainPanel.add(menuDialog);
+        mainPanel.add(gameField);
+
+        addKeyListener(createMenuDialogAdapter());
+        addKeyListener(new MainKeyListener());
         pack();
 
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        Dimension panelSize = gameField.getMinimumSize();
+        Insets frameSize = getInsets();
+        setMinimumSize(new Dimension(panelSize.width + frameSize.left + frameSize.right,
+                panelSize.height + frameSize.bottom + frameSize.top));
+
     }
 
     public void repaint() {
@@ -40,6 +55,18 @@ public class GameWindow extends JFrame {
                 int keyCode = e.getKeyCode();
                 if (keyCode == KeyEvent.VK_ESCAPE) {
                     menuDialog.setVisible(true);
+                }
+            }
+        };
+    }
+
+    private KeyAdapter MainPlayerAdapter() {
+        return new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                if (keyCode == 'w') {
+
                 }
             }
         };

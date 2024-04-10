@@ -9,15 +9,14 @@ import java.awt.event.*;
 public class MainKeyListener implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
-        // Nem használjuk ezt a metódust
+        // Nem használt
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         // Billentyű lenyomásának eseménye
         if (e.getKeyChar() == 'w') {
-            // System.out.println("-----------------A 'w' gombot
-            // lenyomták.-----------------");
+            System.out.println("-----------------A 'w' gombot lenyomták.-----------------");
         }
     }
 
