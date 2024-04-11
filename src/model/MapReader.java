@@ -17,6 +17,7 @@ import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.moveable.player.Player;
 import model.sprite.weapon.Bomb;
+import model.util.PlayerAction;
 
 public class MapReader {
     private String map;
@@ -25,13 +26,20 @@ public class MapReader {
     private GameModel model;
     private ArrayList<Sprite>[][] board;
     private HashSet<Sprite> sprites;
+    private ArrayList<PlayerAction> actions;
 
-    public MapReader(String mapPath, GameModel model, Dimension cubeSize) throws FileNotFoundException, IOException {
+    public MapReader(String mapPath, GameModel model, Dimension cubeSize, ArrayList<PlayerAction> actions)
+            throws FileNotFoundException, IOException {
         this.map = mapPath;
         this.model = model;
         this.cubeSize = cubeSize;
         this.sprites = new HashSet<>();
+        this.actions = actions;
         fileReader();
+    }
+
+    public MapReader(String mapPath, GameModel model, Dimension cubeSize) throws FileNotFoundException, IOException {
+        this(mapPath, model, cubeSize, new ArrayList<>());
     }
 
     public static Dimension getBoardIndexSize(String mapPath) throws FileNotFoundException, IOException {
@@ -115,10 +123,40 @@ public class MapReader {
                             sprites.add(barrier);
                             break;
 
-                        case "P":
-                            Player player1 = new Player(model, point, "src/data/picture/player/gamer.png");
+                        case "1":
+                            /*
+                             * if (actions.size() == 0) {
+                             * throw new IndexOutOfBoundsException("Too many players in the map");
+                             * }
+                             */
+                            Player player1 = new Player(model, actions.get(0), point,
+                                    "src/data/picture/player/gamer.png");
                             board[i][j].add(player1);
                             sprites.add(player1);
+                            break;
+
+                        case "2":
+                            /*
+                             * if (actions.size() < 2) {
+                             * throw new IndexOutOfBoundsException("Too many players in the map");
+                             * }
+                             */
+                            Player player2 = new Player(model, actions.get(1), point,
+                                    "src/data/picture/player/gamer.png");
+                            board[i][j].add(player2);
+                            sprites.add(player2);
+                            break;
+
+                        case "3":
+                            /*
+                             * if (actions.size() < 3) {
+                             * throw new IndexOutOfBoundsException("Too many players in the map");
+                             * }
+                             */
+                            Player player3 = new Player(model, actions.get(2), point,
+                                    "src/data/picture/player/gamer.png");
+                            board[i][j].add(player3);
+                            sprites.add(player3);
                             break;
 
                         default:

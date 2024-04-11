@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import gui.game.GameWindow;
 import model.sprite.Sprite;
 import model.sprite.moveable.player.Player;
+import model.util.PlayerAction;
 
 public class GameModel {
     public static final String[] MAPS_PATH = {
@@ -45,11 +46,14 @@ public class GameModel {
 
     private Timer timer;
     private long previousTime;
+    private ArrayList<PlayerAction> playerActions;
     // private int gameOverCooldownSeconds;
 
-    public GameModel(GameWindow window, String mapPath, int playerNumber, int wonRoundNumber) {
+    public GameModel(GameWindow window, String mapPath, int wonRoundNumber,
+            ArrayList<PlayerAction> playerActions) {
+        this.playerActions = playerActions;
         this.window = window;
-        init(mapPath, playerNumber, wonRoundNumber);
+        init(mapPath, playerActions.size(), wonRoundNumber);
     }
 
     public void init(String mapPath, int playerNumber, int wonRoundNumber) {
@@ -74,7 +78,7 @@ public class GameModel {
         this.boardPixelSize = new Dimension(cubeSize.width * boardIndexSize.width,
                 cubeSize.height * boardIndexSize.height);
         try {
-            MapReader mr = new MapReader(MapPath, this, cubeSize);
+            MapReader mr = new MapReader(MapPath, this, cubeSize, playerActions);
             board = mr.getBoard();
             sprites = mr.getSprites();
         } catch (FileNotFoundException e) {

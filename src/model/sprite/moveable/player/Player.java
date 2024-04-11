@@ -36,24 +36,23 @@ public class Player extends MoveableSprite {
     private HashSet<Bomb> bombs;
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
+        this(model, new PlayerAction(), imagePoint, imagePath);
+    }
 
-        super(model, null, null, 50, imagePoint, null, model.getCubeSize(), imagePath);
-        this.action = new PlayerAction();
+    public Player(GameModel model, PlayerAction action, Point2D imagePoint, String imagePath) {
+        this(model, action, imagePoint, model.getCubeSize(), imagePath, 50);
+        // action.up = true;
+    }
+
+    private Player(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
+            int speed) {
+        super(model, null, action, speed, imagePoint, null, imageSize, imagePath);
         this.areaPoint = new Point2D.Double(imagePoint.getX(),
                 imagePoint.getY());
         this.area = new Area(
                 new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                         model.getCubeSize().getWidth() * 0.5,
                         model.getCubeSize().getHeight()));
-        action.right = true;
-    }
-
-    private Player(GameModel model, Area area, PlayerAction action, Point2D imagePoint, Point2D areaPoint,
-            Dimension imageSize,
-            String imagePath, int speed) {
-        super(model, null, action, speed, imagePoint, areaPoint, imageSize, imagePath);
-        this.area = new Area(new Ellipse2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
-                imageSize.getHeight()));
         this.sizeOfExplosion = 3;
     }
 
@@ -211,4 +210,5 @@ public class Player extends MoveableSprite {
         Graphics2D gr = (Graphics2D) graphics;
         gr.fill(area);
     }
+
 }
