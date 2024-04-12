@@ -20,7 +20,6 @@ public class MapSettingPanel extends JPanel {
     private Integer playerNumber;
     private Integer wonRoundNumber;
     private String mapPath;
-    private String keyboard;
 
     public MapSettingPanel(StartPanel parentPanel) {
         setLayout(new GridBagLayout());
@@ -41,11 +40,6 @@ public class MapSettingPanel extends JPanel {
             createRoundsRadioButton("5", smallButtonWidth, 5)
         };
 
-        GameTextButton[] keyboardGroup = {
-            createSettingButton("Default", bigButtonSize, true),
-            createSettingButton("Custom", bigButtonSize, false)
-        };
-
         GameImageButton[] mapGroup = {
             createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[0], bigButtonSize, bigButtonSize),
             createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[1], bigButtonSize, bigButtonSize),
@@ -54,7 +48,6 @@ public class MapSettingPanel extends JPanel {
 
         for(GameTextButton button : playerNumberGroup) button.setButtonGroup(playerNumberGroup);
         for(GameTextButton button : roundGroup) button.setButtonGroup(roundGroup);
-        for(GameTextButton button : keyboardGroup) button.setButtonGroup(keyboardGroup);
         for(GameImageButton button : mapGroup) button.setButtonGroup(mapGroup);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -77,20 +70,6 @@ public class MapSettingPanel extends JPanel {
 
         gbc.gridx = 2;
         add(playerNumberGroup[1], gbc);
-
-        //
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("Keyboard setting options"), gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(keyboardGroup[0], gbc);
-
-        gbc.gridx = 2;
-        add(keyboardGroup[1], gbc);
-        //
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -171,21 +150,12 @@ public class MapSettingPanel extends JPanel {
         });
     }
 
-    private GameTextButton createSettingButton(String text, int width, boolean def) {
-        return new GameTextButton(text, width, true, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(playerNumber != null)
-                { parentPanel.goToKeyboardSettingPanel(playerNumber, def); }
-            }
-        });
-    }
 
     private GameTextButton createStartButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(playerNumber != null && wonRoundNumber != null && mapPath != null && keyboard != null) {
+                if(playerNumber != null && wonRoundNumber != null && mapPath != null) {
                     parentPanel.getWindow().startGame(mapPath, playerNumber, wonRoundNumber);
                 }
             }

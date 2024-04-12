@@ -252,7 +252,7 @@ public class KeyboardSettingPanel extends JPanel
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentPanel.goToMapSettingPanel();
+                parentPanel.goToStartGamePanel();
             }
         });
     }
