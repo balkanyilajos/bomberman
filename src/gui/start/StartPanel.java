@@ -63,6 +63,7 @@ public class StartPanel extends JPanel {
     public void goToKeyboardSettingPanel() {
         startGamePanel.setVisible(false);
         mapSettingPanel.setVisible(false);
+        keyboardSettingPanel.reloadKeys();
         keyboardSettingPanel.setVisible(true);
         repaint();
     }

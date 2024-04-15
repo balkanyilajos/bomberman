@@ -8,17 +8,21 @@ import java.awt.Insets;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gui.button.GameImageButton;
 import gui.button.GameTextButton;
+import model.KeyReaderWriter;
 import model.GameModel;
 
 public class KeyboardSettingPanel extends JPanel
 {
     private StartPanel parentPanel;
+    private KeyReaderWriter keyReaderWriter;
     private int[] p1;
     private int[] p2;
     private int[] p3;
@@ -37,109 +41,122 @@ public class KeyboardSettingPanel extends JPanel
 
         int smallButtonWidth = 150;
         int bigButtonSize = 2 * smallButtonWidth;
+
+        try {
+            this.keyReaderWriter = new KeyReaderWriter("src/data/keyboard/keyboard.txt");
         
-        this.keys = new GameTextButton[15];
-        init(smallButtonWidth, bigButtonSize);
+            this.keys = new GameTextButton[15];
+            init(smallButtonWidth, bigButtonSize);
 
-        for(GameTextButton button : keys) button.setButtonGroup(keys);
+            for(GameTextButton button : keys) button.setButtonGroup(keys);
 
-        this.gbc = new GridBagConstraints();
-        this.def = false;
+            this.gbc = new GridBagConstraints();
+            this.def = false;
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        JPanel transparentPanel = new JPanel();
-        transparentPanel.setBackground(new Color(0, 0, 0, 0));
-        transparentPanel.setPreferredSize(new Dimension(1, 100));
-        add(transparentPanel, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.insets = new Insets(5, 5, 5, 5);
+            JPanel transparentPanel = new JPanel();
+            transparentPanel.setBackground(new Color(0, 0, 0, 0));
+            transparentPanel.setPreferredSize(new Dimension(1, 100));
+            add(transparentPanel, gbc);
 
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("UP"), gbc);
+            gbc.gridy = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(createTitle("UP"), gbc);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 1;
-        add(keys[0], gbc);
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.gridx = 1;
+            add(keys[0], gbc);
 
-        gbc.gridx = 2;
-        add(keys[5], gbc);
+            gbc.gridx = 2;
+            add(keys[5], gbc);
 
-         gbc.gridx = 3;
-        add(keys[10], gbc);
+            gbc.gridx = 3;
+            add(keys[10], gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("LEFT"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(createTitle("LEFT"), gbc);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 1;
-        add(keys[1], gbc);
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.gridx = 1;
+            add(keys[1], gbc);
 
-        gbc.gridx = 2;
-        add(keys[6], gbc);
+            gbc.gridx = 2;
+            add(keys[6], gbc);
 
-         gbc.gridx = 3;
-        add(keys[11], gbc);
+            gbc.gridx = 3;
+            add(keys[11], gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("DOWN"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(createTitle("DOWN"), gbc);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 1;
-        add(keys[2], gbc);
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.gridx = 1;
+            add(keys[2], gbc);
 
-        gbc.gridx = 2;
-        add(keys[7], gbc);
+            gbc.gridx = 2;
+            add(keys[7], gbc);
 
-         gbc.gridx = 3;
-        add(keys[12], gbc);
+            gbc.gridx = 3;
+            add(keys[12], gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("RIGHT"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(createTitle("RIGHT"), gbc);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 1;
-        add(keys[3], gbc);
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.gridx = 1;
+            add(keys[3], gbc);
 
-        gbc.gridx = 2;
-        add(keys[8], gbc);
+            gbc.gridx = 2;
+            add(keys[8], gbc);
 
-         gbc.gridx = 3;
-        add(keys[13], gbc);
+            gbc.gridx = 3;
+            add(keys[13], gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(createTitle("BOMB"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 5;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(createTitle("BOMB"), gbc);
 
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 1;
-        add(keys[4], gbc);
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.gridx = 1;
+            add(keys[4], gbc);
 
-        gbc.gridx = 2;
-        add(keys[9], gbc);
+            gbc.gridx = 2;
+            add(keys[9], gbc);
 
-         gbc.gridx = 3;
-        add(keys[14], gbc);
+            gbc.gridx = 3;
+            add(keys[14], gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        add(createBackButton("Back", smallButtonWidth), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 6;
+            add(createBackButton("Back", smallButtonWidth), gbc);
 
-        gbc.gridx = 2;
-        add(createResetButton("Reset", smallButtonWidth), gbc);
+            gbc.gridx = 2;
+            add(createSaveButton("Save", smallButtonWidth), gbc);
+
+            gbc.gridx = 3;
+            add(createResetButton("Reset", smallButtonWidth), gbc);
+        }
+        catch(FileNotFoundException e) {
+            System.out.println(e);
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
         
     }
 
     private void init(int small, int big)
     {
-        reset();
+        reset(false);
         for(int i = 0; i < keys.length; i++)
         {
             int[] array = i < 5 ? p1 : i < 10 ? p2 : p3;
@@ -149,85 +166,51 @@ public class KeyboardSettingPanel extends JPanel
         }
     }
 
-    private void init(boolean enable)
+    public void reloadKeys()
     {
-        System.out.println(enable);
-        reset();
+        init(false);
+    }
+
+    private void init(boolean setDef)
+    {
+        reset(setDef);
         for(int i = 0; i < keys.length; i++)
         {
             int[] array = i < 5 ? p1 : i < 10 ? p2 : p3;
             int index = i%5;
             String text = Character.toString(((char)array[index]));
             keys[i].setText(text);
-            keys[i].setEnabled(enable);
         }
     }
 
-    private void reset()
+    private void reset(boolean setDef)
     {
-        this.p1 = new int[5];
-        p1[0] = KeyEvent.VK_W;
-        p1[1] = KeyEvent.VK_A;
-        p1[2] = KeyEvent.VK_S;
-        p1[3] = KeyEvent.VK_D;
-        p1[4] = KeyEvent.VK_E;
-        this.p2 = new int[5];
-        p2[0] = KeyEvent.VK_I;
-        p2[1] = KeyEvent.VK_J;
-        p2[2] = KeyEvent.VK_K;
-        p2[3] = KeyEvent.VK_L;
-        p2[4] = KeyEvent.VK_O;
-        this.p3 = new int[5];
-        p3[0] = KeyEvent.VK_8;
-        p3[1] = KeyEvent.VK_4;
-        p3[2] = KeyEvent.VK_5;
-        p3[3] = KeyEvent.VK_6;
-        p3[4] = KeyEvent.VK_9;
-    }
-
-    public void setPlayerNumber(int playerNumber, boolean def)
-    {
-        System.out.println(def);
-        if(this.playerNumber < playerNumber && !def)
+        if(setDef)
         {
-            boolean matching = false;
-            ArrayList<Integer> used = new ArrayList<Integer>();
-            int[][] players = new int[3][5];
-            players[0] = p1;
-            players[1] = p2;
-            players[2] = p3;
-            for(int p = 0; p<players.length && !matching; p++)
-            {
-                int[] P = players[p];
-                for(int i = 0; i<P.length && !matching; i++)
-                {
-                    if(!used.contains(P[i])) { used.add(P[i]); }
-                    else{ matching = !matching; }
-                }
-            }
-            if(matching || !def)
-            {init(!def);}
-            if(this.def != def)
-            {
-                this.def = def;
-            }
+            this.p1 = new int[5];
+            p1[0] = KeyEvent.VK_W;
+            p1[1] = KeyEvent.VK_A;
+            p1[2] = KeyEvent.VK_S;
+            p1[3] = KeyEvent.VK_D;
+            p1[4] = KeyEvent.VK_E;
+            this.p2 = new int[5];
+            p2[0] = KeyEvent.VK_I;
+            p2[1] = KeyEvent.VK_J;
+            p2[2] = KeyEvent.VK_K;
+            p2[3] = KeyEvent.VK_L;
+            p2[4] = KeyEvent.VK_O;
+            this.p3 = new int[5];
+            p3[0] = KeyEvent.VK_8;
+            p3[1] = KeyEvent.VK_4;
+            p3[2] = KeyEvent.VK_5;
+            p3[3] = KeyEvent.VK_6;
+            p3[4] = KeyEvent.VK_9;
         }
-        else if(this.def != def)
+        else
         {
-            this.def = def;
-            init(!def);
-        }
-        this.playerNumber = playerNumber;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        for (int i = 10; i<keys.length; i++)
-        {
-            if(playerNumber == 2)
-            { remove(keys[i]); }
-            else
-            { add(keys[i],gbc); }
-            gbc.gridy++;
+            this.p1 = keyReaderWriter.getMoves(1);
+            this.p2 = keyReaderWriter.getMoves(2);
+            this.p3 = keyReaderWriter.getMoves(3);
         }
     }
 
@@ -261,7 +244,28 @@ public class KeyboardSettingPanel extends JPanel
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                init(!def);
+                init(true);
+            }
+        });
+    }
+
+    private GameTextButton createSaveButton(String text, int width) {
+        return new GameTextButton(text, width, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                try
+                {
+                    keyReaderWriter.setMoves(1, p1);
+                    keyReaderWriter.setMoves(2, p2);
+                    keyReaderWriter.setMoves(3, p3);
+                    keyReaderWriter.save();
+                }
+                catch(FileNotFoundException ex) {
+                    System.out.println(ex);
+                }
+                catch(IOException ex) {
+                    System.out.println(ex);
+                }
             }
         });
     }
