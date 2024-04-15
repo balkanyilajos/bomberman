@@ -41,7 +41,12 @@ public class KeyReaderWriter {
             return null;
         }
         index = index-1;
-        return moves[index];
+        int[] kc = new int[moves[index].length];
+        for(int i = 0; i<kc.length; i++ )
+        {
+            kc[i] = moves[index][i];
+        }
+        return kc;
     }
 
     public void setMoves(int index, int[] keyCodes) throws FileNotFoundException, IOException
