@@ -29,6 +29,10 @@ public class StartGamePanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
+        add(createSettingButton("Setting", buttonWidth), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         add(createExitButton("Exit", buttonWidth), gbc);
     }
 
@@ -46,6 +50,15 @@ public class StartGamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+    }
+
+    private JButton createSettingButton(String text, int width) {
+        return new GameTextButton(text, width, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parentPanel.goToKeyboardSettingPanel();
             }
         });
     }

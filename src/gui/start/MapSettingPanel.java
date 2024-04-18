@@ -97,7 +97,7 @@ public class MapSettingPanel extends JPanel {
         add(mapGroup[2], gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         add(createBackButton("Back", bigButtonSize), gbc);
 
         gbc.gridx = 2;
@@ -149,6 +149,7 @@ public class MapSettingPanel extends JPanel {
             }
         });
     }
+
 
     private GameTextButton createStartButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
