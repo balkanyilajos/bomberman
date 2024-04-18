@@ -40,8 +40,7 @@ public class Player extends MoveableSprite {
     }
 
     public Player(GameModel model, PlayerAction action, Point2D imagePoint, String imagePath) {
-        this(model, action, imagePoint, model.getCubeSize(), imagePath, 50);
-        // action.up = true;
+        this(model, action, imagePoint, model.getCubeSize(), imagePath, 150);
     }
 
     private Player(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
@@ -52,12 +51,8 @@ public class Player extends MoveableSprite {
         this.area = new Area(
                 new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                         model.getCubeSize().getWidth() * 0.5,
-                        model.getCubeSize().getHeight()));
+                        model.getCubeSize().getHeight() * 0.8));
         this.sizeOfExplosion = 3;
-    }
-
-    public void setUpTrue() {
-        action.right = true;
     }
 
     public void setInvulnerability(double secTime) {
@@ -113,7 +108,7 @@ public class Player extends MoveableSprite {
 
     @Override
     public void move(double deltaTime) {
-        // deleteSpriteFromBoard(this);
+        model.deleteSpriteFromBoard(this);
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
@@ -128,7 +123,7 @@ public class Player extends MoveableSprite {
             Area newArea = new Area(
                     new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                             model.getCubeSize().getWidth() * 0.5,
-                            model.getCubeSize().getHeight()));
+                            model.getCubeSize().getHeight() * 0.8));
             if (isMoveable(newAreaPoint)) {
                 areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
@@ -144,7 +139,7 @@ public class Player extends MoveableSprite {
             Area newArea = new Area(
                     new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                             model.getCubeSize().getWidth() * 0.5,
-                            model.getCubeSize().getHeight()));
+                            model.getCubeSize().getHeight() * 0.8));
             if (isMoveable(newAreaPoint)) {
                 areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
@@ -160,7 +155,7 @@ public class Player extends MoveableSprite {
             Area newArea = new Area(
                     new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                             model.getCubeSize().getWidth() * 0.5,
-                            model.getCubeSize().getHeight()));
+                            model.getCubeSize().getHeight() * 0.8));
             if (isMoveable(newAreaPoint)) {
                 areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
@@ -176,14 +171,14 @@ public class Player extends MoveableSprite {
             Area newArea = new Area(
                     new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                             model.getCubeSize().getWidth() * 0.5,
-                            model.getCubeSize().getHeight()));
+                            model.getCubeSize().getHeight() * 0.8));
             if (isMoveable(newAreaPoint)) {
                 areaPoint = newAreaPoint;
                 imagePoint = newImagePoint;
                 area = newArea;
             }
         }
-        // addSpriteToBoard(this);
+        model.addSpriteToBoard(this);
     }
 
     @Override
@@ -191,7 +186,8 @@ public class Player extends MoveableSprite {
         HashSet<Sprite> sprites = model.getBoardSprites(point, model.getCubeSize().getWidth());
         sprites.remove(this);
         for (Sprite sprite : sprites) {
-            if (isIntersect(sprite)) {
+            if (isIntersect(sprite, point)) {
+                // System.out.println(sprite);
                 return false;
             }
         }
