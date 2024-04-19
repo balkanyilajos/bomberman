@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,15 @@ public abstract class Sprite {
         return isIntersect(sprite.area);
     }
 
+    public boolean isIntersect(Sprite sprite, Point2D areaPoint) {
+        Area area2 = new Area(
+                new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                        model.getCubeSize().getWidth() * 0.5,
+                        model.getCubeSize().getHeight() * 0.8));
+        area2.intersect(sprite.area);
+        return !area2.isEmpty();
+    }
+
     public boolean isIntersect(Area area) {
         Area area2 = (Area) this.area.clone();
         area2.intersect(area);
@@ -66,7 +76,7 @@ public abstract class Sprite {
     public void destructor() {
         this.model.deleteSpriteFromBoard(this);
     }
-    
+
     public void update(double deltaTime) {
 
     }
