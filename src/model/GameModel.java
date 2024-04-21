@@ -108,7 +108,10 @@ public class GameModel {
                 double deltaTime = getDeltaTime(updatePreviousTime(), previousTime);
 
                 updateSprites(deltaTime);
-                window.repaint();
+
+                if(window != null) {
+                    window.repaint();
+                }
             }
         });
     }
