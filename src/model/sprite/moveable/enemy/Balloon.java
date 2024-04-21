@@ -20,8 +20,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.util.Random;
 
 public class Balloon extends MoveableSprite {
+
+    private int otherDirection;
 
     public Balloon(GameModel model, Point2D imagePoint, String imagePath) {
         this(model, new Action(true, false, false, false), imagePoint, imagePath);
@@ -37,18 +40,27 @@ public class Balloon extends MoveableSprite {
         this.areaPoint = new Point2D.Double(imagePoint.getX(),
                 imagePoint.getY());
         this.area = newArea();
+        setOtherDirection();
+    }
+
+    private void setOtherDirection()
+    {
+        Random rnd = new Random();
+        int N = (int) (model.getBoardIndexSize().getWidth()*model.getBoardIndexSize().getHeight()*10);
+        int n = rnd.nextInt(N);
+        //System.out.println(N+" ** "+n);
+        otherDirection = n;
     }
 
     private Area newArea()
     {
         return new Area(new Rectangle2D.Double(
-            imagePoint.getX()+10, imagePoint.getY()+3,
+            imagePoint.getX()+10, imagePoint.getY()+2,
             model.getCubeSize().getWidth()*0.75, model.getCubeSize().getHeight()));
     }
 
     @Override
     public void move(double deltaTime) {
-        System.out.println(action.up);
         model.deleteSpriteFromBoard(this);
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
@@ -116,7 +128,7 @@ public class Balloon extends MoveableSprite {
         sprites.remove(this);
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
-                // System.out.println(sprite);
+                action.changeDirection();
                 return false;
             }
         }
@@ -126,6 +138,13 @@ public class Balloon extends MoveableSprite {
     @Override
     public void update(double deltaTime) {
         move(deltaTime);
+        otherDirection--;
+        if(otherDirection == 0)
+        {
+            setOtherDirection();
+            action.changeDirection();
+        }
+        System.out.println(otherDirection);
     }
 
     @Override
