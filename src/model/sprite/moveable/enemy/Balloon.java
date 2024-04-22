@@ -49,7 +49,6 @@ public class Balloon extends MoveableSprite {
         Random rnd = new Random();
         int N = (int) (model.getBoardIndexSize().getWidth()*model.getBoardIndexSize().getHeight()*10);
         int n = rnd.nextInt(N);
-        //System.out.println(N+" ** "+n);
         otherDirection = n;
     }
 
