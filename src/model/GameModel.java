@@ -48,6 +48,7 @@ public class GameModel {
             ArrayList<PlayerAction> playerActions) {
         this.playerActions = playerActions;
         this.window = window;
+        createTimer();
         init(mapPath, playerActions.size(), wonRoundNumber);
     }
 
@@ -57,7 +58,6 @@ public class GameModel {
         this.wonRoundNumber = wonRoundNumber;
         this.previousTime = System.nanoTime();
         this.sprites = new HashSet<>();
-        createTimer();
 
         try {
             this.boardIndexSize = MapReader.getBoardIndexSize(mapPath);
@@ -82,6 +82,7 @@ public class GameModel {
             System.out.println(e);
         }
 
+        updatePreviousTime();
         timer.start();
     }
 
@@ -179,6 +180,15 @@ public class GameModel {
         Point indexPoint = getIndexFromCoords(sprite.getAreaPoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].remove(sprite);
         sprites.remove(sprite);
+    }
+
+    public void gameStop(boolean value) {
+        if(value) {
+            timer.stop();
+        }
+        else {
+            timer.start();
+        }
     }
 
 }
