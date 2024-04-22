@@ -3,19 +3,14 @@ package model;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import gui.game.GameWindow;
 import model.sprite.Sprite;
-import model.sprite.moveable.player.Player;
 import model.util.PlayerAction;
 
 public class GameModel {
@@ -53,6 +48,7 @@ public class GameModel {
             ArrayList<PlayerAction> playerActions) {
         this.playerActions = playerActions;
         this.window = window;
+        createTimer();
         init(mapPath, playerActions.size(), wonRoundNumber);
     }
 
@@ -62,7 +58,6 @@ public class GameModel {
         this.wonRoundNumber = wonRoundNumber;
         this.previousTime = System.nanoTime();
         this.sprites = new HashSet<>();
-        createTimer();
 
         try {
             this.boardIndexSize = MapReader.getBoardIndexSize(mapPath);
@@ -87,6 +82,7 @@ public class GameModel {
             System.out.println(e);
         }
 
+        updatePreviousTime();
         timer.start();
     }
 
@@ -184,6 +180,15 @@ public class GameModel {
         Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].remove(sprite);
         sprites.remove(sprite);
+    }
+
+    public void gameStop(boolean value) {
+        if(value) {
+            timer.stop();
+        }
+        else {
+            timer.start();
+        }
     }
 
 }
