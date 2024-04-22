@@ -12,6 +12,7 @@ import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
 import model.sprite.weapon.Bomb;
+import model.sprite.moveable.player.Player;
 import model.util.Action;
 import model.util.PlayerAction;
 
@@ -129,6 +130,10 @@ public class Balloon extends MoveableSprite {
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
                 action.changeDirection();
+                if(sprite instanceof Player)
+                {
+                    sprite.destructor();
+                }
                 return false;
             }
         }
@@ -144,7 +149,6 @@ public class Balloon extends MoveableSprite {
             setOtherDirection();
             action.changeDirection();
         }
-        System.out.println(otherDirection);
     }
 
     @Override
