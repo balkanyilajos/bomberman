@@ -27,13 +27,13 @@ public class Box extends Sprite {
 
     public Box(GameModel model, Point2D areaPoint, Dimension areaSize, Point2D imagePoint, Dimension imageSize) {
         super(model, new Area(new Rectangle2D.Double(areaPoint.getX(), areaPoint.getY(), areaSize.width, areaSize.height)),
-            imagePoint, (Point2D)imagePoint.clone(), imageSize, "src/data/picture/box/0.png");
+            imagePoint, areaPoint, imageSize, "src/data/picture/box/0.png");
         
         elimination = new ArrayList<>();
         elapsedTime = 0;
         isDestroyed = false;
         eliminationIndex = 0;
-
+        System.out.println("alap: " + areaPoint +" "+ areaSize);
         for (int i = 1; i <= 8; i++) {
             try {
                 elimination.add(ImageIO.read(new File("src/data/picture/box/" + i + ".png")));

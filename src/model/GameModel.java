@@ -3,19 +3,14 @@ package model;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import gui.game.GameWindow;
 import model.sprite.Sprite;
-import model.sprite.moveable.player.Player;
 import model.util.PlayerAction;
 
 public class GameModel {
@@ -177,13 +172,13 @@ public class GameModel {
     }
 
     public void addSpriteToBoard(Sprite sprite) {
-        Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
+        Point indexPoint = getIndexFromCoords(sprite.getAreaPoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].add(sprite);
         sprites.add(sprite);
     }
 
     public void deleteSpriteFromBoard(Sprite sprite) {
-        Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
+        Point indexPoint = getIndexFromCoords(sprite.getAreaPoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].remove(sprite);
         sprites.remove(sprite);
     }
