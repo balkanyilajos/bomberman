@@ -165,8 +165,6 @@ public class Bomb extends Sprite {
     
     private boolean eliminateSprite(Sprite sprite) {
         if(sprite instanceof Player) {
-            System.out.println("játékos!!!");
-            this.model.printBoard();
             sprite.destructor();
         }
         if(sprite instanceof Wall) {
