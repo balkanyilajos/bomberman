@@ -1,24 +1,19 @@
 package model.sprite.moveable.player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 
 import model.GameModel;
 import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
 import model.sprite.weapon.Bomb;
-import model.util.Action;
 import model.util.PlayerAction;
 
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 
 public class Player extends MoveableSprite {
@@ -101,14 +96,14 @@ public class Player extends MoveableSprite {
         sizeOfExplosion -= numberOfCubes;
     }
 
-    private void palceBarrier() {
+    private void placeBarrier() {
         numberOfBarriers--;
         Barrier barrier = new Barrier(model, imagePoint);
     }
 
     @Override
     public void move(double deltaTime) {
-        model.deleteSpriteFromBoard(this);
+        Point2D previousAreaPoint = (Point2D)areaPoint.clone();
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
@@ -178,7 +173,7 @@ public class Player extends MoveableSprite {
                 area = newArea;
             }
         }
-        model.addSpriteToBoard(this);
+        model.changeSpriteMovementOnBoard(this, previousAreaPoint);
     }
 
     @Override

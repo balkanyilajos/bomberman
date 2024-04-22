@@ -1,6 +1,8 @@
 package model.sprite.weapon;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -45,6 +47,15 @@ public class Flame extends Sprite {
             System.out.println(e);
         }
         
+    }
+
+    @Override
+    public void draw(Graphics graphics) {
+        graphics.drawImage(actualImage, (int) imagePoint.getX(), (int) imagePoint.getY(), (int) imageSize.getWidth(),
+                (int) imageSize.getHeight(), null);
+        
+        Graphics2D g = (Graphics2D)graphics;
+        g.fill(area);
     }
     
 }
