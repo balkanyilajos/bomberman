@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 
 import model.GameModel;
 import model.sprite.Sprite;
@@ -32,8 +33,9 @@ public class Player extends MoveableSprite {
     private boolean hasNoBomb = false;
     private boolean hasSlowMovement = false;
     private boolean hasAllBombsPlaceNow = false;
-    private double sizeOfExplosion;
-    private HashSet<Bomb> bombs;
+    private double sizeOfExplosion = 3;
+    private HashSet<Bomb> bombs = new HashSet<Bomb>();
+    private Bomb lastBomb;
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
         this(model, new PlayerAction(), imagePoint, imagePath);
@@ -85,8 +87,25 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         numberOfBombs--;
-        // Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 2);
-        // bombs.add(bomb);
+        Point temp = model.getIndexFromCoords(areaPoint);
+        System.out.println("B:" + model.getSpriteFromMatrix(temp));
+        if (temp.y == 0) {
+            temp.y += 1;
+        } else if (temp.x == 0) {
+            temp.x += 1;
+        } else if (temp.x == model.getBoardIndexSize().width) {
+            temp.x -= 1;
+        } else if (temp.y == model.getBoardIndexSize().height) {
+            temp.y -= 1;
+        }
+        Point2D bombPlace = model.getCoordsFromIndex(temp);
+        lastBomb = new Bomb(this.model, bombPlace, this.sizeOfExplosion, 3);
+        bombs.add(lastBomb);
+        model.addSpriteToBoard(lastBomb);
+
+        Point current = model.getIndexFromCoords(bombPlace);
+        // model.getSpriteFromMatrix(current);
+        System.out.println("A:" + model.getSpriteFromMatrix(current));
     }
 
     public void increaseNumberOfBombs(int numberOfNewBombs) {
@@ -178,16 +197,24 @@ public class Player extends MoveableSprite {
                 area = newArea;
             }
         }
+
         model.addSpriteToBoard(this);
+
+        if (action.placeBomb) {
+            placeBomb();
+        }
     }
 
     @Override
     public boolean isMoveable(Point2D point) {
         HashSet<Sprite> sprites = model.getBoardSprites(point, model.getCubeSize().getWidth());
         sprites.remove(this);
+        // System.out.println(sprites);
+        if (lastBomb != null) {
+            sprites.remove(lastBomb);
+        }
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
-                // System.out.println(sprite);
                 return false;
             }
         }
@@ -197,7 +224,6 @@ public class Player extends MoveableSprite {
     @Override
     public void update(double deltaTime) {
         move(deltaTime);
-        placeBomb();
     }
 
     @Override

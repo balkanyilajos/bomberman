@@ -171,6 +171,11 @@ public class GameModel {
         return (HashSet<Sprite>) sprites.clone();
     }
 
+    public ArrayList<Sprite> getSpriteFromMatrix(Point point) {
+        ArrayList<Sprite> result = board[point.x][point.y];
+        return result;
+    }
+
     public void addSpriteToBoard(Sprite sprite) {
         Point indexPoint = getIndexFromCoords(sprite.getImagePoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].add(sprite);
