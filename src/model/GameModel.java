@@ -11,6 +11,7 @@ import javax.swing.Timer;
 
 import gui.game.GameWindow;
 import model.sprite.Sprite;
+import model.sprite.moveable.player.Player;
 import model.util.PlayerAction;
 
 public class GameModel {
@@ -28,6 +29,7 @@ public class GameModel {
 
     private ArrayList<Sprite>[][] board;
     private HashSet<Sprite> sprites;
+    private HashSet<Sprite> deletedSprites;
 
     // private int rounds;
     // private int roundsCounter;
@@ -48,6 +50,7 @@ public class GameModel {
             ArrayList<PlayerAction> playerActions) {
         this.playerActions = playerActions;
         this.window = window;
+        createTimer();
         init(mapPath, playerActions.size(), wonRoundNumber);
     }
 
@@ -57,7 +60,7 @@ public class GameModel {
         this.wonRoundNumber = wonRoundNumber;
         this.previousTime = System.nanoTime();
         this.sprites = new HashSet<>();
-        createTimer();
+        this.deletedSprites = new HashSet<>();
 
         try {
             this.boardIndexSize = MapReader.getBoardIndexSize(mapPath);
@@ -82,6 +85,7 @@ public class GameModel {
             System.out.println(e);
         }
 
+        updatePreviousTime();
         timer.start();
     }
 
@@ -108,7 +112,10 @@ public class GameModel {
                 double deltaTime = getDeltaTime(updatePreviousTime(), previousTime);
 
                 updateSprites(deltaTime);
-                window.repaint();
+
+                if(window != null) {
+                    window.repaint();
+                }
             }
         });
     }
@@ -167,15 +174,62 @@ public class GameModel {
     }
 
     public void addSpriteToBoard(Sprite sprite) {
+        if(deletedSprites.contains(sprite)) {
+            System.out.println("Already deleted!");
+            return;
+        }
         Point indexPoint = getIndexFromCoords(sprite.getAreaPoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].add(sprite);
         sprites.add(sprite);
     }
 
     public void deleteSpriteFromBoard(Sprite sprite) {
+        deletedSprites.add(sprite);
         Point indexPoint = getIndexFromCoords(sprite.getAreaPoint());
         this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].remove(sprite);
         sprites.remove(sprite);
+    }
+
+    public void changeSpriteMovementOnBoard(Sprite sprite, Point2D previousAreaPoint) {
+        addSpriteToBoard(sprite);
+        Point indexPoint = getIndexFromCoords(previousAreaPoint);
+        this.board[(int) indexPoint.getY()][(int) indexPoint.getX()].remove(sprite);
+    }
+
+    public void gameStop(boolean value) {
+        if(value) {
+            timer.stop();
+        }
+        else {
+            timer.start();
+        }
+    }
+
+    public void printBoard() {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j].size() == 0) {
+                    sb.append("_ ");
+                }
+                else {
+                    boolean p = false;
+                    for(Sprite s : board[i][j]) {
+                        if(s instanceof Player) {
+                            sb.append("O ");
+                            p = true;
+                        }
+                    }
+                    if(!p) {
+                        sb.append("X ");
+                    }
+                }
+            }
+            sb.append("\n");
+        }
+
+        sb.append("\n");
+        System.out.println(sb.toString());
     }
 
 }

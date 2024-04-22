@@ -11,6 +11,7 @@ import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
+import model.sprite.moveable.player.Player;
 import model.util.Action;
 
 public class Bomb extends Sprite {
@@ -93,49 +94,50 @@ public class Bomb extends Sprite {
     @Override
     public void destructor() {
         isDestroyed = true;
+        if(elapsedTime < flameSeconds) {
+            return;
+        }
+
+        elapsedTime -= flameSeconds;
+        if(bombAction.any()) {
+            // the explosion slows down
+            flameSeconds *= 1 + 0.3/radiusIndex;
+        }
+        else {
+            if(flameUp.size() >= startFlameIndex || flameDown.size() >= startFlameIndex ||
+               flameRight.size() >= startFlameIndex || flameLeft.size() >= startFlameIndex) {
+                startFlameIndex += 1;
+            }
+            else {
+                super.destructor();
+            }
+        }
+
         int addPixel = (int)(model.getCubeSize().width * 0.3);
         HashSet<Sprite> sprites = model.getBoardSprites(areaPoint, radius);
         sprites.remove(this);
 
-        bombAction.right = bombAction.right && doFlameAction(sprites, new Dimension(addPixel, 0), flameRight, false, new Point2D.Double(radius + areaPoint.getX() + addPixel, Double.MAX_VALUE), new Action(false, false, false, true));
-        bombAction.left = bombAction.left && doFlameAction(sprites, new Dimension(-addPixel, 0), flameLeft, true, new Point2D.Double(areaPoint.getX() - radius - addPixel, Double.MIN_VALUE), new Action(false, false, true, false));
-        bombAction.down = bombAction.down && doFlameAction(sprites, new Dimension(0, addPixel), flameDown, false, new Point2D.Double(Double.MAX_VALUE, radius + areaPoint.getY() + addPixel), new Action(false, true, false, false));
-        bombAction.up = bombAction.up && doFlameAction(sprites, new Dimension(0, -addPixel), flameUp, true, new Point2D.Double(Double.MIN_VALUE, areaPoint.getY() - radius - addPixel), new Action(true, false, false, false));
+        bombAction.right = bombAction.right & doFlameAction(sprites, new Dimension(addPixel, 0), flameRight, false, new Point2D.Double(radius + areaPoint.getX() + addPixel, Double.MAX_VALUE), new Action(false, false, false, bombAction.right));
+        bombAction.left = bombAction.left & doFlameAction(sprites, new Dimension(-addPixel, 0), flameLeft, true, new Point2D.Double(areaPoint.getX() - radius - addPixel, Double.MIN_VALUE), new Action(false, false, bombAction.left, false));
+        bombAction.down = bombAction.down & doFlameAction(sprites, new Dimension(0, addPixel), flameDown, false, new Point2D.Double(Double.MAX_VALUE, radius + areaPoint.getY() + addPixel), new Action(false, bombAction.down, false, false));
+        bombAction.up = bombAction.up & doFlameAction(sprites, new Dimension(0, -addPixel), flameUp, true, new Point2D.Double(Double.MIN_VALUE, areaPoint.getY() - radius - addPixel), new Action(bombAction.up, false, false, false));
+    
     }
 
     @Override
     public void update(double deltaTime) {
-        elapsedTime += deltaTime;
-        if(isDestroyed) {
-            if(elapsedTime >= flameSeconds) {
-                elapsedTime -= flameSeconds;
-                if(bombAction.any()) {
-                    // the explosion slows down
-                    flameSeconds *= 1 + 0.3/radiusIndex;
-                    destructor();
-                }
-                else {
-                    if(flameUp.size() >= startFlameIndex || flameDown.size() >= startFlameIndex ||
-                        flameRight.size() >= startFlameIndex || flameLeft.size() >= startFlameIndex) {
-                        startFlameIndex += 1;
-                    }
-                    else {
-                        super.destructor();
-                    }
-                }
-            }
+        if(isDestroyed || explosionSeconds != -1) {
+            elapsedTime += deltaTime;
         }
-        else {
-            if(explosionSeconds != -1) {
-                if(elapsedTime >= explosionSeconds) {
-                    elapsedTime = 0;
-                    destructor();
-                }
-                  
-            }
-            else {
-                elapsedTime = 0;
-            }
+
+        if(isDestroyed) {
+            destructor();
+            return;
+        }
+
+        if(elapsedTime >= explosionSeconds) {
+            elapsedTime -= explosionSeconds;
+            destructor();
         }
     }
 
@@ -146,22 +148,27 @@ public class Bomb extends Sprite {
         coord.y += addPixel.getHeight();
         for(Flame flame : flames) {
             for(Sprite sprite : sprites) {
-                boolean isOverRange = (isGreaterThanToRange) ? coord.getX() > toRange.getX() && coord.getY() > toRange.getY() : coord.getX() < toRange.getX() && coord.getY() < toRange.getY();
-                if(isOverRange) {
-                    if(flame.isIntersect(sprite)) {
-                        if(eliminateSprite(sprite)) return false;
-                    }
-                }
-                else {
-                    return false;
+                if(flame.isIntersect(sprite)) {
+                    if(eliminateSprite(sprite)) return false;
                 }
             }
         }
+
+        boolean isOverRange = (isGreaterThanToRange) ? coord.getX() < toRange.getX() || coord.getY() < toRange.getY() : coord.getX() > toRange.getX() || coord.getY() > toRange.getY();
+        if(isOverRange || !direction.any()) {
+            return false;
+        }
+
         flames.add(new Flame(model, coord, direction));
         return true;
     }
     
     private boolean eliminateSprite(Sprite sprite) {
+        if(sprite instanceof Player) {
+            System.out.println("játékos!!!");
+            this.model.printBoard();
+            sprite.destructor();
+        }
         if(sprite instanceof Wall) {
             return true;
         }
