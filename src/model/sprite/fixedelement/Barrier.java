@@ -20,15 +20,13 @@ public class Barrier extends Sprite {
     private boolean isDestroyed;
     private int eliminationIndex;
 
-    public Barrier(GameModel model, Point2D imagePoint) {
-        this(model, new Point2D.Double(imagePoint.getX() - model.getCubeSize().width * 2 * 0.24, imagePoint.getY() - model.getCubeSize().height * 1.4 * 0.2), new Dimension((int) (model.getCubeSize().width * 2), (int) (model.getCubeSize().height * 1.4)));
+    public Barrier(GameModel model, Point2D point) {
+        this(model, point, model.getCubeSize(), new Point2D.Double(point.getX() - model.getCubeSize().width * 2 * 0.24, point.getY() - model.getCubeSize().height * 1.4 * 0.2), new Dimension((int) (model.getCubeSize().width * 2), (int) (model.getCubeSize().height * 1.4)));
     }
 
-    public Barrier(GameModel model, Point2D imagePoint, Dimension imageSize) {
-        super(model,
-                new Area(new Rectangle2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
-                        imageSize.getHeight())),
-                imagePoint, (Point2D) imagePoint.clone(), imageSize, "src/data/picture/barrier/0.png");
+    public Barrier(GameModel model, Point2D areaPoint, Dimension areaSize, Point2D imagePoint, Dimension imageSize) {
+        super(model, new Area(new Rectangle2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
+            imageSize.getHeight())), imagePoint, areaPoint, imageSize, "src/data/picture/barrier/0.png");
 
         isDestroyed = false;
         elapsedTime = 0;
