@@ -45,6 +45,5 @@ public class Flame extends Sprite {
             System.out.println(e);
         }
         
-    }
-    
+    }    
 }
