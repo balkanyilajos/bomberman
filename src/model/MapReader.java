@@ -14,6 +14,7 @@ import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.moveable.player.Player;
+import model.sprite.moveable.enemy.Balloon;
 import model.sprite.weapon.Bomb;
 import model.util.PlayerAction;
 
@@ -155,6 +156,17 @@ public class MapReader {
                                     "src/data/picture/player/gamer.png");
                             board[i][j].add(player3);
                             sprites.add(player3);
+                            break;
+                        case "M":
+                            /*
+                             * if (actions.size() < 3) {
+                             * throw new IndexOutOfBoundsException("Too many players in the map");
+                             * }
+                             */
+                            Balloon monster = new Balloon(model, point,
+                                    "src/data/picture/monster/dino1.png");
+                            board[i][j].add(monster);
+                            sprites.add(monster);
                             break;
 
                         default:
