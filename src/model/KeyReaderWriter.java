@@ -22,60 +22,49 @@ public class KeyReaderWriter {
         try (BufferedReader br = new BufferedReader(new FileReader(keys))) {
             String str = "";
             int I = 0;
-            while((str=br.readLine())!=null)
-            {
+            while ((str = br.readLine()) != null) {
                 String[] tokens = str.split(" ");
-                for(int i = 0; i<tokens.length; i++)
-                {
+                for (int i = 0; i < tokens.length; i++) {
                     moves[I][i] = Integer.parseInt(tokens[i]);
                 }
-                I = I+1;
+                I = I + 1;
             }
         }
     }
 
-    public int[] getMoves(int index)
-    {
-        if(index > moves.length && index < 0)
-        {
+    public int[] getMoves(int index) {
+        if (index > moves.length && index < 0) {
             return null;
         }
-        index = index-1;
+        index = index - 1;
         int[] kc = new int[moves[index].length];
-        for(int i = 0; i<kc.length; i++ )
-        {
+        for (int i = 0; i < kc.length; i++) {
             kc[i] = moves[index][i];
         }
         return kc;
     }
 
-    public void setMoves(int index, int[] keyCodes) throws FileNotFoundException, IOException
-    {
-        if(index > moves.length && index < 0)
-        {
+    public void setMoves(int index, int[] keyCodes) throws FileNotFoundException, IOException {
+        if (index > moves.length && index < 0) {
             return;
         }
-        index = index-1;
+        index = index - 1;
         moves[index] = keyCodes;
     }
 
-    public void save() throws FileNotFoundException, IOException
-    {
+    public void save() throws FileNotFoundException, IOException {
         fileWriter();
     }
 
-    private void fileWriter() throws FileNotFoundException, IOException
-    {
+    private void fileWriter() throws FileNotFoundException, IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(keys))) {
-            for(int i = 0; i < moves.length; i++)
-            {
+            for (int i = 0; i < moves.length; i++) {
                 int[] keyCodes = moves[i];
                 String str = "";
-                for(int j = 0; j<keyCodes.length; j++)
-                {
-                    str += keyCodes[j]+" ";
+                for (int j = 0; j < keyCodes.length; j++) {
+                    str += keyCodes[j] + " ";
                 }
-                str.substring(0, str.length()-1);
+                str.substring(0, str.length() - 1);
                 bw.write(str);
                 bw.newLine();
             }

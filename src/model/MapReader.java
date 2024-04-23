@@ -122,11 +122,6 @@ public class MapReader {
                             break;
 
                         case "1":
-                            /*
-                             * if (actions.size() == 0) {
-                             * throw new IndexOutOfBoundsException("Too many players in the map");
-                             * }
-                             */
                             Player player1 = new Player(model, actions.get(0), point,
                                     "src/data/picture/player/gamer.png");
                             board[i][j].add(player1);
@@ -134,11 +129,6 @@ public class MapReader {
                             break;
 
                         case "2":
-                            /*
-                             * if (actions.size() < 2) {
-                             * throw new IndexOutOfBoundsException("Too many players in the map");
-                             * }
-                             */
                             Player player2 = new Player(model, actions.get(1), point,
                                     "src/data/picture/player/gamer.png");
                             board[i][j].add(player2);
@@ -146,11 +136,6 @@ public class MapReader {
                             break;
 
                         case "3":
-                            /*
-                             * if (actions.size() < 3) {
-                             * throw new IndexOutOfBoundsException("Too many players in the map");
-                             * }
-                             */
                             Player player3 = new Player(model, actions.get(2), point,
                                     "src/data/picture/player/gamer.png");
                             board[i][j].add(player3);

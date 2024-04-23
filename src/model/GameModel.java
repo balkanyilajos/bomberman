@@ -17,10 +17,12 @@ import model.util.PlayerAction;
 
 public class GameModel {
     public static final String[] MAPS_PATH = {
-            "src/data/map/1.txt",
-            "src/data/map/2.txt",
-            "src/data/map/3.txt"
+            "src/data/map/1",
+            "src/data/map/2",
+            "src/data/map/3"
     };
+
+    private static final String Player = null;
 
     private final GameWindow window;
 
@@ -167,6 +169,21 @@ public class GameModel {
         }
 
         return returnSprites;
+    }
+
+    public boolean isWin() {
+        int numberOfActivePlayers = 0;
+        for (Sprite sprite : sprites) {
+            if (sprite instanceof Player) {
+                numberOfActivePlayers++;
+            }
+        }
+
+        if (numberOfActivePlayers == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @SuppressWarnings("unchecked")
