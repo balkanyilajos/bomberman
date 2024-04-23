@@ -61,7 +61,7 @@ public class Balloon extends MoveableSprite {
 
     @Override
     public void move(double deltaTime) {
-        model.deleteSpriteFromBoard(this);
+        Point2D previousAreaPoint = (Point2D)areaPoint.clone();
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
@@ -119,7 +119,7 @@ public class Balloon extends MoveableSprite {
                 area = newArea;
             }
         }
-        model.addSpriteToBoard(this);
+        model.changeSpriteMovementOnBoard(this, previousAreaPoint);
     }
 
     @Override
