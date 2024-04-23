@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import gui.game.GameWindow;
 import model.sprite.Sprite;
 import model.sprite.moveable.player.Player;
+import model.sprite.weapon.Bomb;
 import model.util.PlayerAction;
 
 public class GameModel {
@@ -113,7 +114,7 @@ public class GameModel {
 
                 updateSprites(deltaTime);
 
-                if(window != null) {
+                if (window != null) {
                     window.repaint();
                 }
             }
@@ -179,7 +180,7 @@ public class GameModel {
     }
 
     public void addSpriteToBoard(Sprite sprite) {
-        if(deletedSprites.contains(sprite)) {
+        if (deletedSprites.contains(sprite)) {
             System.out.println("Already deleted!");
             return;
         }
@@ -202,30 +203,28 @@ public class GameModel {
     }
 
     public void gameStop(boolean value) {
-        if(value) {
+        if (value) {
             timer.stop();
-        }
-        else {
+        } else {
             timer.start();
         }
     }
 
     public void printBoard() {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[i].length; j++) {
-                if(board[i][j].size() == 0) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j].size() == 0) {
                     sb.append("_ ");
-                }
-                else {
+                } else {
                     boolean p = false;
-                    for(Sprite s : board[i][j]) {
-                        if(s instanceof Player) {
+                    for (Sprite s : board[i][j]) {
+                        if (s instanceof Player) {
                             sb.append("O ");
                             p = true;
                         }
                     }
-                    if(!p) {
+                    if (!p) {
                         sb.append("X ");
                     }
                 }
