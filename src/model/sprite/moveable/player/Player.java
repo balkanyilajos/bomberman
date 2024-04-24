@@ -9,8 +9,10 @@ import model.GameModel;
 import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
+import model.sprite.moveable.enemy.Balloon;
 import model.sprite.weapon.Bomb;
 import model.util.PlayerAction;
+import model.sprite.powerup.*;
 
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -52,6 +54,10 @@ public class Player extends MoveableSprite {
 
     public void setInvulnerability(double secTime) {
         hasInvulnarability = true;
+    }
+
+    public boolean getInvulnerability() {
+        return hasInvulnarability;
     }
 
     public void setGhostForm(double secTime) {
@@ -182,7 +188,17 @@ public class Player extends MoveableSprite {
         sprites.remove(this);
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
-                // System.out.println(sprite);
+                if(sprite instanceof PowerUp)
+                {
+                    PowerUp pu = (PowerUp) sprite;
+                    pu.effect(this);
+                    sprite.destructor();
+                    return true;
+                }
+                else if(sprite instanceof Balloon && !hasInvulnarability)
+                {
+                        destructor();
+                }
                 return false;
             }
         }

@@ -10,22 +10,25 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class BombBooster extends PowerUp {
 
     public BombBooster(GameModel model, Point2D point) {
-        this(model, point, model.getCubeSize(), new Point2D.Double(point.getX() - model.getCubeSize().width * 2 * 0.3, point.getY() - model.getCubeSize().height * 1.4 * 0.18), new Dimension((int) (model.getCubeSize().width * 2), (int) (model.getCubeSize().height * 1.4)));
+        this(model, point, model.getCubeSize(), new Point2D.Double(point.getX(), point.getY()), new Dimension((int) (model.getCubeSize().width), (int) (model.getCubeSize().height)));
     }
 
     public BombBooster(GameModel model, Point2D areaPoint, Dimension areaSize, Point2D imagePoint, Dimension imageSize) {
-        super(model, new Area(new Rectangle2D.Double(areaPoint.getX(), areaPoint.getY(), areaSize.width, areaSize.height)),
+        super(model, new Area(new Ellipse2D.Double(areaPoint.getX()+areaSize.width*0.125, areaPoint.getY()+areaSize.height*0.125, areaSize.width*0.75, areaSize.height*0.75)),
             imagePoint, areaPoint, imageSize, "src/data/picture/powerup/shield.png");
     }
 
     @Override
     public void effect(Player player)
-    {}
+    { player.setInvulnerability(30); }
 }

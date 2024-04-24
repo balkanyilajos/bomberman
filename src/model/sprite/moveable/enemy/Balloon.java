@@ -131,7 +131,9 @@ public class Balloon extends MoveableSprite {
                 action.changeDirection();
                 if(sprite instanceof Player)
                 {
-                    sprite.destructor();
+                    Player player = (Player) sprite;
+                    if(!player.getInvulnerability())
+                    { sprite.destructor(); }
                 }
                 return false;
             }
