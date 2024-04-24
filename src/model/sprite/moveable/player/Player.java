@@ -17,6 +17,7 @@ import model.sprite.powerup.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Player extends MoveableSprite {
     private int numberOfBombs = 3;
@@ -31,6 +32,7 @@ public class Player extends MoveableSprite {
     private boolean hasAllBombsPlaceNow = false;
     private double sizeOfExplosion;
     private HashSet<Bomb> bombs;
+    private ArrayList<PowerUp> powerUps;
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
         this(model, new PlayerAction(), imagePoint, imagePath);
@@ -50,10 +52,37 @@ public class Player extends MoveableSprite {
                         model.getCubeSize().getWidth() * 0.5,
                         model.getCubeSize().getHeight() * 0.8));
         this.sizeOfExplosion = 3;
+        this.powerUps = new ArrayList<PowerUp>();
     }
 
-    public void setInvulnerability(double secTime) {
+    public void usePowerUps(double deltaTime)
+    {
+        int l = powerUps.size();
+        for (int i = 0; i<l;)
+        {
+            PowerUp p = powerUps.get(i);
+            if(!p.decreaseTime(deltaTime))
+            {
+                powerUps.remove(p);
+                l--;
+            }
+            else
+            {
+                i++;
+            }
+
+        }
+    }
+
+    public void setInvulnerability(BombBooster powerup)
+    {
         hasInvulnarability = true;
+        powerUps.add(powerup);
+    }
+
+    public void unsetInvulnerability()
+    {
+        hasInvulnarability = false;
     }
 
     public boolean getInvulnerability() {
@@ -209,6 +238,7 @@ public class Player extends MoveableSprite {
     public void update(double deltaTime) {
         move(deltaTime);
         placeBomb();
+        usePowerUps(deltaTime);
     }
 
     @Override

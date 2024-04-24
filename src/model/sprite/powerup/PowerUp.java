@@ -16,13 +16,20 @@ import java.awt.geom.Rectangle2D;
 
 public abstract class PowerUp extends Sprite {
 
+    protected double time;
+    protected Player player;
+
     public PowerUp(GameModel model, Area area, Point2D imagePoint,
             Point2D areaPoint,
             Dimension imageSize,
-            String imagePath) 
+            String imagePath, double time) 
     {
         super(model, area, imagePoint, areaPoint, imageSize, imagePath);
+        this.time = time;
+        this.player = null;
     }
+
+    public abstract boolean decreaseTime(double deltaTime);
 
     public abstract void effect(Player player);
 }
