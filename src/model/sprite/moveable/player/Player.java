@@ -30,8 +30,11 @@ public class Player extends MoveableSprite {
     private boolean hasNoBomb = false;
     private boolean hasSlowMovement = false;
     private boolean hasAllBombsPlaceNow = false;
-    private double sizeOfExplosion;
-    private HashSet<Bomb> bombs;
+    private double sizeOfExplosion = 1;
+    private double cubeSize = model.getCubeSize().getWidth();
+    private HashSet<Bomb> bombs = new HashSet<Bomb>();
+    private Bomb lastBomb;
+
     private ArrayList<PowerUp> powerUps;
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
@@ -237,7 +240,7 @@ public class Player extends MoveableSprite {
     @Override
     public void update(double deltaTime) {
         move(deltaTime);
-        placeBomb();
+        //placeBomb();
         usePowerUps(deltaTime);
     }
 
