@@ -11,12 +11,15 @@ import model.GameModel;
 import model.sprite.Sprite;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
+import model.sprite.moveable.enemy.Balloon;
 import model.sprite.weapon.Bomb;
 import model.util.PlayerAction;
+import model.sprite.powerup.*;
 
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Player extends MoveableSprite {
     private int numberOfBombs = 1;
@@ -34,6 +37,8 @@ public class Player extends MoveableSprite {
     private double cubeSize = model.getCubeSize().getWidth();
     private HashSet<Bomb> bombs = new HashSet<Bomb>();
     private Bomb lastBomb;
+
+    private ArrayList<PowerUp> powerUps;
 
     public Player(GameModel model, Point2D imagePoint, String imagePath) {
         this(model, new PlayerAction(), imagePoint, imagePath);
@@ -53,10 +58,43 @@ public class Player extends MoveableSprite {
                         model.getCubeSize().getWidth() * 0.5,
                         model.getCubeSize().getHeight() * 0.8));
         this.sizeOfExplosion = 3;
+        this.powerUps = new ArrayList<PowerUp>();
     }
 
-    public void setInvulnerability(double secTime) {
+    public void usePowerUps(double deltaTime)
+    {
+        int l = powerUps.size();
+        for (int i = 0; i<l;)
+        {
+            PowerUp p = powerUps.get(i);
+            if(!p.decreaseTime(deltaTime))
+            {
+                powerUps.remove(p);
+                l--;
+            }
+            else
+            {
+                i++;
+            }
+
+        }
+    }
+
+    public void setInvulnerability(BombBooster powerup)
+    {
         hasInvulnarability = true;
+        powerUps.add(powerup);
+        System.out.println("S");
+    }
+
+    public void unsetInvulnerability()
+    {
+        hasInvulnarability = false;
+        System.out.println("E");
+    }
+
+    public boolean getInvulnerability() {
+        return hasInvulnarability;
     }
 
     public void setGhostForm(double secTime) {
@@ -223,6 +261,17 @@ public class Player extends MoveableSprite {
         // System.out.println("After: " + sprites);
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
+                if(sprite instanceof PowerUp)
+                {
+                    PowerUp pu = (PowerUp) sprite;
+                    pu.effect(this);
+                    sprite.destructor();
+                    return true;
+                }
+                else if(sprite instanceof Balloon && !hasInvulnarability)
+                {
+                        destructor();
+                }
                 return false;
             }
         }
@@ -233,6 +282,8 @@ public class Player extends MoveableSprite {
     public void update(double deltaTime) {
         updateLastBomb();
         move(deltaTime);
+        //placeBomb();
+        usePowerUps(deltaTime);
     }
 
     @Override

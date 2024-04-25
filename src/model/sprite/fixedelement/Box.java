@@ -14,6 +14,7 @@ import java.awt.Image;
 
 import model.GameModel;
 import model.sprite.Sprite;
+import model.sprite.powerup.*;
 
 public class Box extends Sprite {
     private ArrayList<Image> elimination;
@@ -49,6 +50,8 @@ public class Box extends Sprite {
 
         if (elapsedTime >= 0.1) {
             if (eliminationIndex >= elimination.size()) {
+                BombBooster bb = new BombBooster(model, areaPoint);
+                model.addSpriteToBoard(bb);
                 super.destructor();
                 return;
             }

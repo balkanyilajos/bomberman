@@ -16,10 +16,10 @@ import java.io.IOException;
 
 public abstract class MoveableSprite extends Sprite {
 
-    protected Action action;
+    protected PlayerAction action;
     protected int speed;
 
-    public MoveableSprite(GameModel model, Area area, Action action, int speed, Point2D imagePoint,
+    public MoveableSprite(GameModel model, Area area, PlayerAction action, int speed, Point2D imagePoint,
             Point2D areaPoint,
             Dimension imageSize,
             String imagePath) {

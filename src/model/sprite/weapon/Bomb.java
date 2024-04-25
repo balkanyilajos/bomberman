@@ -12,6 +12,7 @@ import model.sprite.fixedelement.Barrier;
 import model.sprite.fixedelement.Box;
 import model.sprite.fixedelement.Wall;
 import model.sprite.moveable.player.Player;
+import model.sprite.powerup.*;
 import model.util.Action;
 
 public class Bomb extends Sprite {
@@ -167,7 +168,7 @@ public class Bomb extends Sprite {
         if(sprite instanceof Player) {
             sprite.destructor();
         }
-        if(sprite instanceof Wall) {
+        if(sprite instanceof Wall || sprite instanceof PowerUp) {
             return true;
         }
         else if (sprite instanceof Bomb) {
