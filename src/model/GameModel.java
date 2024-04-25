@@ -12,14 +12,17 @@ import javax.swing.Timer;
 import gui.game.GameWindow;
 import model.sprite.Sprite;
 import model.sprite.moveable.player.Player;
+import model.sprite.weapon.Bomb;
 import model.util.PlayerAction;
 
 public class GameModel {
     public static final String[] MAPS_PATH = {
-            "src/data/map/1.txt",
-            "src/data/map/2.txt",
-            "src/data/map/3.txt"
+            "src/data/map/1",
+            "src/data/map/2",
+            "src/data/map/3"
     };
+
+    private static final String Player = null;
 
     private final GameWindow window;
 
@@ -113,7 +116,7 @@ public class GameModel {
 
                 updateSprites(deltaTime);
 
-                if(window != null) {
+                if (window != null) {
                     window.repaint();
                 }
             }
@@ -168,13 +171,33 @@ public class GameModel {
         return returnSprites;
     }
 
+    public boolean isWin() {
+        int numberOfActivePlayers = 0;
+        for (Sprite sprite : sprites) {
+            if (sprite instanceof Player) {
+                numberOfActivePlayers++;
+            }
+        }
+
+        if (numberOfActivePlayers == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public HashSet<Sprite> getBoardSprites() {
         return (HashSet<Sprite>) sprites.clone();
     }
 
+    public ArrayList<Sprite> getSpriteFromMatrix(Point point) {
+        ArrayList<Sprite> result = board[point.x][point.y];
+        return result;
+    }
+
     public void addSpriteToBoard(Sprite sprite) {
-        if(deletedSprites.contains(sprite)) {
+        if (deletedSprites.contains(sprite)) {
             System.out.println("Already deleted!");
             return;
         }
@@ -197,30 +220,28 @@ public class GameModel {
     }
 
     public void gameStop(boolean value) {
-        if(value) {
+        if (value) {
             timer.stop();
-        }
-        else {
+        } else {
             timer.start();
         }
     }
 
     public void printBoard() {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[i].length; j++) {
-                if(board[i][j].size() == 0) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j].size() == 0) {
                     sb.append("_ ");
-                }
-                else {
+                } else {
                     boolean p = false;
-                    for(Sprite s : board[i][j]) {
-                        if(s instanceof Player) {
+                    for (Sprite s : board[i][j]) {
+                        if (s instanceof Player) {
                             sb.append("O ");
                             p = true;
                         }
                     }
-                    if(!p) {
+                    if (!p) {
                         sb.append("X ");
                     }
                 }

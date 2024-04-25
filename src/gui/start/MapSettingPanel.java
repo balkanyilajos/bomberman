@@ -30,25 +30,28 @@ public class MapSettingPanel extends JPanel {
         int bigButtonSize = 2 * smallButtonWidth;
 
         GameTextButton[] playerNumberGroup = {
-            createPlayerRadioButton("2", smallButtonWidth, 2),
-            createPlayerRadioButton("3", smallButtonWidth, 3)
+                createPlayerRadioButton("2", smallButtonWidth, 2),
+                createPlayerRadioButton("3", smallButtonWidth, 3)
         };
 
         GameTextButton[] roundGroup = {
-            createRoundsRadioButton("1", smallButtonWidth, 1),
-            createRoundsRadioButton("2", smallButtonWidth, 2),
-            createRoundsRadioButton("5", smallButtonWidth, 5)
+                createRoundsRadioButton("1", smallButtonWidth, 1),
+                createRoundsRadioButton("2", smallButtonWidth, 2),
+                createRoundsRadioButton("5", smallButtonWidth, 5)
         };
 
         GameImageButton[] mapGroup = {
-            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[0], bigButtonSize, bigButtonSize),
-            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[1], bigButtonSize, bigButtonSize),
-            createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[2], bigButtonSize, bigButtonSize)
+                createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[0], bigButtonSize, bigButtonSize),
+                createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[1], bigButtonSize, bigButtonSize),
+                createMapRadioButton("src/data/picture/wall.png", GameModel.MAPS_PATH[2], bigButtonSize, bigButtonSize)
         };
 
-        for(GameTextButton button : playerNumberGroup) button.setButtonGroup(playerNumberGroup);
-        for(GameTextButton button : roundGroup) button.setButtonGroup(roundGroup);
-        for(GameImageButton button : mapGroup) button.setButtonGroup(mapGroup);
+        for (GameTextButton button : playerNumberGroup)
+            button.setButtonGroup(playerNumberGroup);
+        for (GameTextButton button : roundGroup)
+            button.setButtonGroup(roundGroup);
+        for (GameImageButton button : mapGroup)
+            button.setButtonGroup(mapGroup);
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -150,13 +153,19 @@ public class MapSettingPanel extends JPanel {
         });
     }
 
-
     private GameTextButton createStartButton(String text, int width) {
         return new GameTextButton(text, width, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(playerNumber != null && wonRoundNumber != null && mapPath != null) {
-                    parentPanel.getWindow().startGame(mapPath, playerNumber, wonRoundNumber);
+                if (playerNumber != null && wonRoundNumber != null && mapPath != null) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(mapPath);
+                    if (playerNumber == 2) {
+                        sb.append(".txt");
+                    } else {
+                        sb.append("p3.txt");
+                    }
+                    parentPanel.getWindow().startGame(sb.toString(), playerNumber, wonRoundNumber);
                 }
             }
         });

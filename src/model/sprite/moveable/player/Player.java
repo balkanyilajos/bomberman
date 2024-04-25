@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 
 import model.GameModel;
 import model.sprite.Sprite;
@@ -20,7 +22,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Player extends MoveableSprite {
-    private int numberOfBombs = 3;
+    private int numberOfBombs = 1;
+    private int numberOfPlacedBomb = 0;
     private int numberOfBarriers = 1;
     private double secTime;
     private boolean hasDetonator = false;
@@ -117,9 +120,34 @@ public class Player extends MoveableSprite {
     }
 
     private void placeBomb() {
-        numberOfBombs--;
-        // Bomb bomb = new Bomb(this.model, this.areaPoint, this.sizeOfExplosion, 2);
-        // bombs.add(bomb);
+        if (numberOfPlacedBomb < numberOfBombs) {
+            // System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +
+            // numberOfPlacedBomb);
+            numberOfPlacedBomb++;
+            Point temp = model.getIndexFromCoords(areaPoint);
+            if (temp.y == 0) {
+                temp.y += 1;
+            } else if (temp.x == 0) {
+                temp.x += 1;
+            } else if (temp.x == model.getBoardIndexSize().width) {
+                temp.x -= 1;
+            } else if (temp.y == model.getBoardIndexSize().height) {
+                temp.y -= 1;
+            }
+            Point2D bombPlace = model.getCoordsFromIndex(temp);
+            lastBomb = new Bomb(this.model, bombPlace, this.sizeOfExplosion * cubeSize, 3);
+            bombs.add(lastBomb);
+            // Point current = model.getIndexFromCoords(bombPlace);
+            model.addSpriteToBoard(lastBomb);
+        }
+    }
+
+    public void updateLastBomb() {
+        if (!model.getBoardSprites().contains(lastBomb) && lastBomb != null) {
+            lastBomb = null;
+            bombs.remove(lastBomb);
+            numberOfPlacedBomb--;
+        }
     }
 
     public void increaseNumberOfBombs(int numberOfNewBombs) {
@@ -141,7 +169,7 @@ public class Player extends MoveableSprite {
 
     @Override
     public void move(double deltaTime) {
-        Point2D previousAreaPoint = (Point2D)areaPoint.clone();
+        Point2D previousAreaPoint = (Point2D) areaPoint.clone();
         double division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
@@ -211,13 +239,24 @@ public class Player extends MoveableSprite {
                 area = newArea;
             }
         }
+        // System.out.println(model.getBoardSprites(areaPoint, 1));
+        if (action.placeBomb) {
+            // System.out.println(model.getBoardSprites(areaPoint, 1));
+            placeBomb();
+        }
         model.changeSpriteMovementOnBoard(this, previousAreaPoint);
+        // System.out.println(model.getBoardSprites(areaPoint, 1));
     }
 
     @Override
     public boolean isMoveable(Point2D point) {
         HashSet<Sprite> sprites = model.getBoardSprites(point, model.getCubeSize().getWidth());
         sprites.remove(this);
+        // System.out.println(sprites);
+        if (lastBomb != null && isIntersect(lastBomb.getArea())) {
+            sprites.remove(lastBomb);
+        }
+        // System.out.println("After: " + sprites);
         for (Sprite sprite : sprites) {
             if (isIntersect(sprite, point)) {
                 if(sprite instanceof PowerUp)
@@ -239,6 +278,7 @@ public class Player extends MoveableSprite {
 
     @Override
     public void update(double deltaTime) {
+        updateLastBomb();
         move(deltaTime);
         //placeBomb();
         usePowerUps(deltaTime);
