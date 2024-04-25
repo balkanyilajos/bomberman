@@ -51,8 +51,8 @@ public class Player extends MoveableSprite {
     private Player(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
             int speed) {
         super(model, null, action, speed, imagePoint, null, imageSize, imagePath);
-        this.areaPoint = new Point2D.Double(imagePoint.getX(),
-                imagePoint.getY());
+        this.areaPoint = new Point2D.Double(imagePoint.getX()+10,
+                imagePoint.getY()+10);
         this.area = new Area(
                 new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                         model.getCubeSize().getWidth() * 0.5,

@@ -1,5 +1,6 @@
 package model.sprite.fixedelement;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;

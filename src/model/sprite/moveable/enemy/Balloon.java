@@ -2,6 +2,7 @@ package model.sprite.moveable.enemy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,7 +33,7 @@ public class Balloon extends MoveableSprite {
     }
 
     public Balloon(GameModel model, PlayerAction action, Point2D imagePoint, String imagePath) {
-        this(model, action, imagePoint, model.getCubeSize(), imagePath, 75);
+        this(model, action, imagePoint, model.getCubeSize(), imagePath, 150);
     }
 
     private Balloon(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
@@ -56,7 +57,7 @@ public class Balloon extends MoveableSprite {
     {
         return new Area(new Rectangle2D.Double(
             imagePoint.getX()+10, imagePoint.getY()+2,
-            model.getCubeSize().getWidth()*0.75, model.getCubeSize().getHeight()));
+            model.getCubeSize().getWidth()*0.75, model.getCubeSize().getHeight()*0.9));
     }
 
     @Override
@@ -156,6 +157,7 @@ public class Balloon extends MoveableSprite {
     public void draw(Graphics graphics) {
         super.draw(graphics);
         Graphics2D gr = (Graphics2D) graphics;
+        gr.setPaint(Color.GREEN);
         gr.fill(area);
     }
 
