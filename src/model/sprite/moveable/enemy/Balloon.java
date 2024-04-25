@@ -28,14 +28,14 @@ public class Balloon extends MoveableSprite {
     private int otherDirection;
 
     public Balloon(GameModel model, Point2D imagePoint, String imagePath) {
-        this(model, new Action(true, false, false, false), imagePoint, imagePath);
+        this(model, new PlayerAction(true, false, false, false), imagePoint, imagePath);
     }
 
-    public Balloon(GameModel model, Action action, Point2D imagePoint, String imagePath) {
+    public Balloon(GameModel model, PlayerAction action, Point2D imagePoint, String imagePath) {
         this(model, action, imagePoint, model.getCubeSize(), imagePath, 75);
     }
 
-    private Balloon(GameModel model, Action action, Point2D imagePoint, Dimension imageSize, String imagePath,
+    private Balloon(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
             int speed) {
         super(model, null, action, speed, imagePoint, null, imageSize, imagePath);
         this.areaPoint = new Point2D.Double(imagePoint.getX(),

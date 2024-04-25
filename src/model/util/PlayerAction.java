@@ -9,5 +9,10 @@ public class PlayerAction extends Action {
         super();
         placeBomb = placeBarrier = false;
     }
+
+    public PlayerAction(boolean up, boolean down, boolean left, boolean right) {
+        super(up, down, left,right);
+        placeBomb = placeBarrier = false;
+    }
     
 }

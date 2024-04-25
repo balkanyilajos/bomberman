@@ -84,11 +84,13 @@ public class Player extends MoveableSprite {
     {
         hasInvulnarability = true;
         powerUps.add(powerup);
+        System.out.println("S");
     }
 
     public void unsetInvulnerability()
     {
         hasInvulnarability = false;
+        System.out.println("E");
     }
 
     public boolean getInvulnerability() {
