@@ -165,8 +165,14 @@ public class Bomb extends Sprite {
     }
     
     private boolean eliminateSprite(Sprite sprite) {
-        if(sprite instanceof Player) {
-            sprite.destructor();
+        if(sprite instanceof Player){
+            if(sprite instanceof Player)
+            {
+                Player p = (Player) sprite;
+                if(p.getInvulnerability())
+                { return true; }
+                sprite.destructor();
+            }
         }
         if(sprite instanceof Wall || sprite instanceof PowerUp) {
             return true;
