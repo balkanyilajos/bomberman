@@ -1,6 +1,5 @@
 package model.sprite.moveable.player;
 
-import java.util.HashSet;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,6 +8,7 @@ import java.awt.Point;
 
 import model.GameModel;
 import model.sprite.Sprite;
+import java.util.HashSet;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
 import model.sprite.moveable.enemy.Balloon;
@@ -35,7 +35,7 @@ public class Player extends MoveableSprite {
     private boolean hasAllBombsPlaceNow = false;
     private double sizeOfExplosion = 1;
     private double cubeSize = model.getCubeSize().getWidth();
-    private HashSet<Bomb> bombs = new HashSet<Bomb>();
+    private ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     private Bomb lastBomb;
 
     private ArrayList<PowerUp> powerUps;
@@ -80,16 +80,28 @@ public class Player extends MoveableSprite {
         }
     }
 
-    public void setInvulnerability(BombBooster powerup)
+    public void setInvulnerability(Invulnerability powerup)
     {
         hasInvulnarability = true;
         powerUps.add(powerup);
-        System.out.println("S");
     }
 
     public void unsetInvulnerability()
     {
         hasInvulnarability = false;
+    }
+
+    public void setBombBooster(BombBooster powerup)
+    {
+        if(numberOfBombs > 1) { return; }
+        System.out.println("S");
+        increaseNumberOfBombs(1);
+        powerUps.add(powerup);
+    }
+
+    public void unsetBombBooster()
+    {
+        increaseNumberOfBombs(-1);
         System.out.println("E");
     }
 
@@ -123,8 +135,7 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         if (numberOfPlacedBomb < numberOfBombs) {
-            // System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +
-            // numberOfPlacedBomb);
+            System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +numberOfPlacedBomb);
             numberOfPlacedBomb++;
             Point temp = model.getIndexFromCoords(areaPoint);
             if (temp.y == 0) {
@@ -141,14 +152,17 @@ public class Player extends MoveableSprite {
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
             model.addSpriteToBoard(lastBomb);
+            System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +numberOfPlacedBomb);
+            action.placeBomb = false;
         }
     }
 
     public void updateLastBomb() {
         if (!model.getBoardSprites().contains(lastBomb) && lastBomb != null) {
-            lastBomb = null;
-            bombs.remove(lastBomb);
+            lastBomb = bombs.size()>1 ? bombs.get(1) : null;
+            bombs.remove(0);
             numberOfPlacedBomb--;
+            
         }
     }
 
@@ -282,7 +296,6 @@ public class Player extends MoveableSprite {
     public void update(double deltaTime) {
         updateLastBomb();
         move(deltaTime);
-        //placeBomb();
         usePowerUps(deltaTime);
     }
 
