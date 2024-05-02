@@ -82,6 +82,7 @@ public class Player extends MoveableSprite {
 
     public void setInvulnerability(Invulnerability powerup)
     {
+        if(hasInvulnarability) { return; }
         hasInvulnarability = true;
         powerUps.add(powerup);
     }
@@ -128,8 +129,19 @@ public class Player extends MoveableSprite {
         hasDetonator = true;
     }
 
-    public void setRollerSkater() {
+    public void setRollerSkater(RollerSkates powerup)
+    {
+        if(hasRollerSkater)
+        { return; }
         hasRollerSkater = true;
+        powerUps.add(powerup);
+        speed = speed*2;
+    }
+
+    public void unsetRollerSkater()
+    {
+        hasRollerSkater = false;
+        speed = speed/2;
     }
 
     public void setNoBomb(double secTime) {
@@ -152,7 +164,6 @@ public class Player extends MoveableSprite {
             int y = (int) Math.floor(areaPoint.getY()/model.getCubeSize().height);
             y = y == 0 ? 1 : (model.getBoardIndexSize().height-2<y) ? model.getBoardIndexSize().height-2 : y;
             x = x == 0 ? 1 : (model.getBoardIndexSize().width-2<x) ? model.getBoardIndexSize().width-2 : x;
-            System.out.println(model.getBoardIndexSize());
             Point2D bombPlace = new Point2D.Double(x*model.getCubeSize().width, y*model.getCubeSize().height);
             lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
             bombs.add(lastBomb);
