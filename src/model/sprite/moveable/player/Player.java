@@ -57,7 +57,6 @@ public class Player extends MoveableSprite {
                 new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                         model.getCubeSize().getWidth() * 0.5,
                         model.getCubeSize().getHeight() * 0.8));
-        this.sizeOfExplosion = 3;
         this.powerUps = new ArrayList<PowerUp>();
     }
 
@@ -94,7 +93,6 @@ public class Player extends MoveableSprite {
     public void setBombBooster(BombBooster powerup)
     {
         if(numberOfBombs > 1) { return; }
-        System.out.println("S");
         increaseNumberOfBombs(1);
         powerUps.add(powerup);
     }
@@ -102,7 +100,19 @@ public class Player extends MoveableSprite {
     public void unsetBombBooster()
     {
         increaseNumberOfBombs(-1);
+    }
+
+    public void setBlastBooster(BlastBooster powerup)
+    {
+        powerUps.add(powerup);
+        increaseExplosion(1);
+        System.out.println("S");
+    }
+
+    public void unsetBlastBooster()
+    {
         System.out.println("E");
+        decreaseExposion(1);
     }
 
     public boolean getInvulnerability() {
@@ -148,7 +158,7 @@ public class Player extends MoveableSprite {
                 temp.y -= 1;
             }
             Point2D bombPlace = model.getCoordsFromIndex(temp);
-            lastBomb = new Bomb(this.model, bombPlace, this.sizeOfExplosion * cubeSize, 3);
+            lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
             model.addSpriteToBoard(lastBomb);
