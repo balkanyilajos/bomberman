@@ -53,7 +53,6 @@ public class Box extends Sprite {
             if (eliminationIndex >= elimination.size()) {
                 Random ran = new Random(); 
                 int pu = ran.nextInt(3);
-                pu = 2;
                 if(pu == 0)
                 {
                     BombBooster bb = new BombBooster(model, areaPoint);

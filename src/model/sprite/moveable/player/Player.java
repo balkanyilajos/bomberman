@@ -17,6 +17,7 @@ import model.util.PlayerAction;
 import model.sprite.powerup.*;
 
 import java.awt.geom.Area;
+import java.lang.Math;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -145,24 +146,18 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         if (numberOfPlacedBomb < numberOfBombs) {
-            System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +numberOfPlacedBomb);
             numberOfPlacedBomb++;
             Point temp = model.getIndexFromCoords(areaPoint);
-            if (temp.y == 0) {
-                temp.y += 1;
-            } else if (temp.x == 0) {
-                temp.x += 1;
-            } else if (temp.x == model.getBoardIndexSize().width) {
-                temp.x -= 1;
-            } else if (temp.y == model.getBoardIndexSize().height) {
-                temp.y -= 1;
-            }
-            Point2D bombPlace = model.getCoordsFromIndex(temp);
+            int x = (int) Math.floor(areaPoint.getX()/model.getCubeSize().width);
+            int y = (int) Math.floor(areaPoint.getY()/model.getCubeSize().height);
+            y = y == 0 ? 1 : (model.getBoardIndexSize().height-2<y) ? model.getBoardIndexSize().height-2 : y;
+            x = x == 0 ? 1 : (model.getBoardIndexSize().width-2<x) ? model.getBoardIndexSize().width-2 : x;
+            System.out.println(model.getBoardIndexSize());
+            Point2D bombPlace = new Point2D.Double(x*model.getCubeSize().width, y*model.getCubeSize().height);
             lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
             model.addSpriteToBoard(lastBomb);
-            System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +numberOfPlacedBomb);
             action.placeBomb = false;
         }
     }
