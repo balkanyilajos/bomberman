@@ -31,6 +31,7 @@ public class Player extends MoveableSprite {
     private boolean hasRollerSkater = false;
     private boolean hasInvulnarability = false;
     private boolean hasGhostForm = false;
+    private boolean hasBlastBooster = false;
     private boolean hasNoBomb = false;
     private boolean hasSlowMovement = false;
     private boolean hasAllBombsPlaceNow = false;
@@ -106,8 +107,10 @@ public class Player extends MoveableSprite {
 
     public void setBlastBooster(BlastBooster powerup)
     {
+        if(hasBlastBooster) { return; }
         powerUps.add(powerup);
         increaseExplosion(1);
+        hasBlastBooster = true;
         System.out.println("S");
     }
 
@@ -115,6 +118,20 @@ public class Player extends MoveableSprite {
     {
         System.out.println("E");
         decreaseExposion(1);
+        hasBlastBooster = false;
+    }
+
+        public void setDetonator(Detonator powerup)
+    {
+        if(hasDetonator) { return; }
+        powerUps.add(powerup);
+        hasDetonator = true;
+    }
+
+    public void unsetDetonator()
+    {
+        hasDetonator = false;
+        detonateBombs();
     }
 
     public boolean getInvulnerability() {
@@ -123,10 +140,6 @@ public class Player extends MoveableSprite {
 
     public void setGhostForm(double secTime) {
         hasGhostForm = true;
-    }
-
-    public void setDetonator() {
-        hasDetonator = true;
     }
 
     public void setRollerSkater(RollerSkates powerup)
@@ -166,11 +179,29 @@ public class Player extends MoveableSprite {
             x = x == 0 ? 1 : (model.getBoardIndexSize().width-2<x) ? model.getBoardIndexSize().width-2 : x;
             Point2D bombPlace = new Point2D.Double(x*model.getCubeSize().width, y*model.getCubeSize().height);
             lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
+            //****NOT EXPLOSING BOMB IF HASDETONATOR IS TRUE ELSE BASIC BOMB*****/
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
             model.addSpriteToBoard(lastBomb);
             action.placeBomb = false;
         }
+        else if(numberOfPlacedBomb == numberOfBombs && hasDetonator)
+        {
+            detonateBombs();
+        }
+    }
+
+    private void detonateBombs()
+    {
+        int l = bombs.size();
+        while(l>0)
+        {
+            Bomb b = bombs.remove(0);
+            b.destructor();
+            l--;
+        }
+        numberOfPlacedBomb = 0;
+        lastBomb = null;
     }
 
     public void updateLastBomb() {
