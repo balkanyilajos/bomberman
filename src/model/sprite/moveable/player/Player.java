@@ -172,13 +172,11 @@ public class Player extends MoveableSprite {
     private void placeBomb() {
         if (numberOfPlacedBomb < numberOfBombs) {
             numberOfPlacedBomb++;
-            Point temp = model.getIndexFromCoords(areaPoint);
-            int x = (int) Math.floor(areaPoint.getX()/model.getCubeSize().width);
-            int y = (int) Math.floor(areaPoint.getY()/model.getCubeSize().height);
-            y = y == 0 ? 1 : (model.getBoardIndexSize().height-2<y) ? model.getBoardIndexSize().height-2 : y;
-            x = x == 0 ? 1 : (model.getBoardIndexSize().width-2<x) ? model.getBoardIndexSize().width-2 : x;
-            Point2D bombPlace = new Point2D.Double(x*model.getCubeSize().width, y*model.getCubeSize().height);
+            Point2D center = new Point2D.Double(imagePoint.getX()+imageSize.width/2,imagePoint.getY()+imageSize.height/2);
+            Point c = model.getIndexFromCoords(center);
+            Point2D bombPlace = new Point2D.Double(c.getX()*model.getCubeSize().width, c.getY()*model.getCubeSize().height);
             lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
+            lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 60);
             //****NOT EXPLOSING BOMB IF HASDETONATOR IS TRUE ELSE BASIC BOMB*****/
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
@@ -202,6 +200,7 @@ public class Player extends MoveableSprite {
         }
         numberOfPlacedBomb = 0;
         lastBomb = null;
+        action.placeBomb = false;
     }
 
     public void updateLastBomb() {
@@ -228,6 +227,13 @@ public class Player extends MoveableSprite {
     private void placeBarrier() {
         numberOfBarriers--;
         Barrier barrier = new Barrier(model, imagePoint);
+    }
+
+    @Override
+    public void destructor()
+    {
+        detonateBombs();
+        this.model.deleteSpriteFromBoard(this);
     }
 
     @Override
