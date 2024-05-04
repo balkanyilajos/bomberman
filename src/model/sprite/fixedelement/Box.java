@@ -52,8 +52,7 @@ public class Box extends Sprite {
         if (elapsedTime >= 0.1) {
             if (eliminationIndex >= elimination.size()) {
                 Random ran = new Random(); 
-                int pu = ran.nextInt(5);
-                pu = 4;
+                int pu = ran.nextInt(6);
                 if(pu == 0)
                 {
                     BombBooster bb = new BombBooster(model, areaPoint);
@@ -74,7 +73,7 @@ public class Box extends Sprite {
                     RollerSkates rs = new RollerSkates(model, areaPoint);
                     model.addSpriteToBoard(rs);
                 }
-                else
+                else if(pu == 4)
                 {
                     Detonator d = new Detonator(model, areaPoint);
                     model.addSpriteToBoard(d);

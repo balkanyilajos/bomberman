@@ -136,7 +136,7 @@ public class Bomb extends Sprite {
             return;
         }
 
-        if(elapsedTime >= explosionSeconds) {
+        if(elapsedTime >= explosionSeconds && explosionSeconds != -1) {
             elapsedTime -= explosionSeconds;
             destructor();
         }

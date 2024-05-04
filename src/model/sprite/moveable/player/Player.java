@@ -176,7 +176,10 @@ public class Player extends MoveableSprite {
             Point c = model.getIndexFromCoords(center);
             Point2D bombPlace = new Point2D.Double(c.getX()*model.getCubeSize().width, c.getY()*model.getCubeSize().height);
             lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
-            lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 60);
+            if(hasDetonator)
+            {
+                lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize);
+            }
             //****NOT EXPLOSING BOMB IF HASDETONATOR IS TRUE ELSE BASIC BOMB*****/
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
