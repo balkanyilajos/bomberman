@@ -1,6 +1,5 @@
 package model.sprite.moveable.player;
 
-import java.util.HashSet;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,6 +8,7 @@ import java.awt.Point;
 
 import model.GameModel;
 import model.sprite.Sprite;
+import java.util.HashSet;
 import model.sprite.fixedelement.Barrier;
 import model.sprite.moveable.MoveableSprite;
 import model.sprite.moveable.enemy.Balloon;
@@ -17,6 +17,7 @@ import model.util.PlayerAction;
 import model.sprite.powerup.*;
 
 import java.awt.geom.Area;
+import java.lang.Math;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -30,12 +31,13 @@ public class Player extends MoveableSprite {
     private boolean hasRollerSkater = false;
     private boolean hasInvulnarability = false;
     private boolean hasGhostForm = false;
+    private boolean hasBlastBooster = false;
     private boolean hasNoBomb = false;
     private boolean hasSlowMovement = false;
     private boolean hasAllBombsPlaceNow = false;
     private double sizeOfExplosion = 1;
     private double cubeSize = model.getCubeSize().getWidth();
-    private HashSet<Bomb> bombs = new HashSet<Bomb>();
+    private ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     private Bomb lastBomb;
 
     private ArrayList<PowerUp> powerUps;
@@ -51,13 +53,12 @@ public class Player extends MoveableSprite {
     private Player(GameModel model, PlayerAction action, Point2D imagePoint, Dimension imageSize, String imagePath,
             int speed) {
         super(model, null, action, speed, imagePoint, null, imageSize, imagePath);
-        this.areaPoint = new Point2D.Double(imagePoint.getX(),
-                imagePoint.getY());
+        this.areaPoint = new Point2D.Double(imagePoint.getX()+10,
+                imagePoint.getY()+10);
         this.area = new Area(
                 new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
                         model.getCubeSize().getWidth() * 0.5,
                         model.getCubeSize().getHeight() * 0.8));
-        this.sizeOfExplosion = 3;
         this.powerUps = new ArrayList<PowerUp>();
     }
 
@@ -80,17 +81,57 @@ public class Player extends MoveableSprite {
         }
     }
 
-    public void setInvulnerability(BombBooster powerup)
+    public void setInvulnerability(Invulnerability powerup)
     {
+        if(hasInvulnarability) { return; }
         hasInvulnarability = true;
         powerUps.add(powerup);
-        System.out.println("S");
     }
 
     public void unsetInvulnerability()
     {
         hasInvulnarability = false;
+    }
+
+    public void setBombBooster(BombBooster powerup)
+    {
+        if(numberOfBombs > 1) { return; }
+        increaseNumberOfBombs(1);
+        powerUps.add(powerup);
+    }
+
+    public void unsetBombBooster()
+    {
+        increaseNumberOfBombs(-1);
+    }
+
+    public void setBlastBooster(BlastBooster powerup)
+    {
+        if(hasBlastBooster) { return; }
+        powerUps.add(powerup);
+        increaseExplosion(1);
+        hasBlastBooster = true;
+        System.out.println("S");
+    }
+
+    public void unsetBlastBooster()
+    {
         System.out.println("E");
+        decreaseExposion(1);
+        hasBlastBooster = false;
+    }
+
+        public void setDetonator(Detonator powerup)
+    {
+        if(hasDetonator) { return; }
+        powerUps.add(powerup);
+        hasDetonator = true;
+    }
+
+    public void unsetDetonator()
+    {
+        hasDetonator = false;
+        detonateBombs();
     }
 
     public boolean getInvulnerability() {
@@ -101,12 +142,19 @@ public class Player extends MoveableSprite {
         hasGhostForm = true;
     }
 
-    public void setDetonator() {
-        hasDetonator = true;
+    public void setRollerSkater(RollerSkates powerup)
+    {
+        if(hasRollerSkater)
+        { return; }
+        hasRollerSkater = true;
+        powerUps.add(powerup);
+        speed = speed*2;
     }
 
-    public void setRollerSkater() {
-        hasRollerSkater = true;
+    public void unsetRollerSkater()
+    {
+        hasRollerSkater = false;
+        speed = speed/2;
     }
 
     public void setNoBomb(double secTime) {
@@ -123,32 +171,47 @@ public class Player extends MoveableSprite {
 
     private void placeBomb() {
         if (numberOfPlacedBomb < numberOfBombs) {
-            // System.out.println("Lerakható: " + numberOfBombs + "\nLerakott: " +
-            // numberOfPlacedBomb);
             numberOfPlacedBomb++;
-            Point temp = model.getIndexFromCoords(areaPoint);
-            if (temp.y == 0) {
-                temp.y += 1;
-            } else if (temp.x == 0) {
-                temp.x += 1;
-            } else if (temp.x == model.getBoardIndexSize().width) {
-                temp.x -= 1;
-            } else if (temp.y == model.getBoardIndexSize().height) {
-                temp.y -= 1;
+            Point2D center = new Point2D.Double(imagePoint.getX()+imageSize.width/2,imagePoint.getY()+imageSize.height/2);
+            Point c = model.getIndexFromCoords(center);
+            Point2D bombPlace = new Point2D.Double(c.getX()*model.getCubeSize().width, c.getY()*model.getCubeSize().height);
+            lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize, 3);
+            if(hasDetonator)
+            {
+                lastBomb = new Bomb(this.model, bombPlace, sizeOfExplosion * cubeSize);
             }
-            Point2D bombPlace = model.getCoordsFromIndex(temp);
-            lastBomb = new Bomb(this.model, bombPlace, this.sizeOfExplosion * cubeSize, 3);
+            //****NOT EXPLOSING BOMB IF HASDETONATOR IS TRUE ELSE BASIC BOMB*****/
             bombs.add(lastBomb);
             // Point current = model.getIndexFromCoords(bombPlace);
             model.addSpriteToBoard(lastBomb);
+            action.placeBomb = false;
         }
+        else if(numberOfPlacedBomb == numberOfBombs && hasDetonator)
+        {
+            detonateBombs();
+        }
+    }
+
+    private void detonateBombs()
+    {
+        int l = bombs.size();
+        while(l>0)
+        {
+            Bomb b = bombs.remove(0);
+            b.destructor();
+            l--;
+        }
+        numberOfPlacedBomb = 0;
+        lastBomb = null;
+        action.placeBomb = false;
     }
 
     public void updateLastBomb() {
         if (!model.getBoardSprites().contains(lastBomb) && lastBomb != null) {
-            lastBomb = null;
-            bombs.remove(lastBomb);
+            lastBomb = bombs.size()>1 ? bombs.get(1) : null;
+            bombs.remove(0);
             numberOfPlacedBomb--;
+            
         }
     }
 
@@ -167,6 +230,13 @@ public class Player extends MoveableSprite {
     private void placeBarrier() {
         numberOfBarriers--;
         Barrier barrier = new Barrier(model, imagePoint);
+    }
+
+    @Override
+    public void destructor()
+    {
+        detonateBombs();
+        this.model.deleteSpriteFromBoard(this);
     }
 
     @Override
@@ -282,7 +352,6 @@ public class Player extends MoveableSprite {
     public void update(double deltaTime) {
         updateLastBomb();
         move(deltaTime);
-        //placeBomb();
         usePowerUps(deltaTime);
     }
 

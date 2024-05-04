@@ -7,6 +7,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -50,8 +51,34 @@ public class Box extends Sprite {
 
         if (elapsedTime >= 0.1) {
             if (eliminationIndex >= elimination.size()) {
-                BombBooster bb = new BombBooster(model, areaPoint);
-                model.addSpriteToBoard(bb);
+                Random ran = new Random(); 
+                int pu = ran.nextInt(6);
+                if(pu == 0)
+                {
+                    BombBooster bb = new BombBooster(model, areaPoint);
+                    model.addSpriteToBoard(bb);
+                }
+                else if(pu == 1)
+                {
+                    Invulnerability i = new Invulnerability(model, areaPoint);
+                    model.addSpriteToBoard(i);
+                }
+                else if(pu == 2)
+                {
+                    BlastBooster bb = new BlastBooster(model, areaPoint);
+                    model.addSpriteToBoard(bb);
+                }
+                else if(pu == 3)
+                {
+                    RollerSkates rs = new RollerSkates(model, areaPoint);
+                    model.addSpriteToBoard(rs);
+                }
+                else if(pu == 4)
+                {
+                    Detonator d = new Detonator(model, areaPoint);
+                    model.addSpriteToBoard(d);
+                }
+                System.out.println(pu);
                 super.destructor();
                 return;
             }

@@ -25,14 +25,14 @@ public class BombBooster extends PowerUp {
 
     public BombBooster(GameModel model, Point2D areaPoint, Dimension areaSize, Point2D imagePoint, Dimension imageSize) {
         super(model, new Area(new Ellipse2D.Double(areaPoint.getX()+areaSize.width*0.125, areaPoint.getY()+areaSize.height*0.125, areaSize.width*0.75, areaSize.height*0.75)),
-            imagePoint, areaPoint, imageSize, "src/data/picture/powerup/shield.png",30);
+            imagePoint, areaPoint, imageSize, "src/data/picture/powerup/bomb.png",30);
     }
 
     @Override
     public void effect(Player player)
     {
         this.player = player;
-        player.setInvulnerability(this);
+        player.setBombBooster(this);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BombBooster extends PowerUp {
         time = time - deltaTime;
         if(time<=0)
         {
-            player.unsetInvulnerability();
+            player.unsetBombBooster();
             this.player = null;
             return false;
         }

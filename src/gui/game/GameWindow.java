@@ -180,68 +180,68 @@ public class GameWindow extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_W) {
+                if (keyCode == keys[0][0]) {
                     actions.get(0).up = false;
                 }
 
-                if (keyCode == KeyEvent.VK_A) {
+                if (keyCode == keys[0][1]) {
                     actions.get(0).left = false;
                 }
 
-                if (keyCode == KeyEvent.VK_S) {
+                if (keyCode == keys[0][2]) {
                     actions.get(0).down = false;
                 }
 
-                if (keyCode == KeyEvent.VK_D) {
+                if (keyCode == keys[0][3]) {
                     actions.get(0).right = false;
                 }
 
-                if (keyCode == KeyEvent.VK_Q) {
+                if (keyCode == keys[0][4]) {
                     actions.get(0).placeBomb = false;
                 }
 
                 // Player2
 
-                if (keyCode == KeyEvent.VK_I) {
+                if (keyCode == keys[1][0]) {
                     actions.get(1).up = false;
                 }
 
-                if (keyCode == KeyEvent.VK_J) {
+                if (keyCode == keys[1][1]) {
                     actions.get(1).left = false;
                 }
 
-                if (keyCode == KeyEvent.VK_K) {
+                if (keyCode == keys[1][2]) {
                     actions.get(1).down = false;
                 }
 
-                if (keyCode == KeyEvent.VK_L) {
+                if (keyCode == keys[1][3]) {
                     actions.get(1).right = false;
                 }
 
-                if (keyCode == KeyEvent.VK_U) {
+                if (keyCode == keys[1][4]) {
                     actions.get(1).placeBomb = false;
                 }
 
                 // Player3
 
                 if (actions.size() > 2) {
-                    if (keyCode == KeyEvent.VK_C) {
+                    if (keyCode == keys[2][0]) {
                         actions.get(2).up = false;
                     }
 
-                    if (keyCode == KeyEvent.VK_V) {
+                    if (keyCode == keys[2][1]) {
                         actions.get(2).left = false;
                     }
 
-                    if (keyCode == KeyEvent.VK_B) {
+                    if (keyCode == keys[2][2]) {
                         actions.get(2).down = false;
                     }
 
-                    if (keyCode == KeyEvent.VK_N) {
+                    if (keyCode == keys[2][3]) {
                         actions.get(2).right = false;
                     }
 
-                    if (keyCode == KeyEvent.VK_X) {
+                    if (keyCode == keys[2][4]) {
                         actions.get(2).placeBomb = false;
                     }
                 }
