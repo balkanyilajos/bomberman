@@ -235,6 +235,10 @@ public class Player extends MoveableSprite {
     @Override
     public void destructor()
     {
+        if(hasInvulnarability) {
+            return;
+        }
+        
         detonateBombs();
         this.model.deleteSpriteFromBoard(this);
     }

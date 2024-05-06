@@ -20,27 +20,27 @@ public class Bomb extends Sprite {
     private int radiusIndex;
     private Dimension size;
 
-    private boolean isDestroyed;
-    private Action bombAction;
-    private int startFlameIndex;
-    private ArrayList<Flame> flameUp;
-    private ArrayList<Flame> flameDown;
-    private ArrayList<Flame> flameRight;
-    private ArrayList<Flame> flameLeft;
+    private boolean isDestroyed = false;
+    private Action bombAction = new Action(true, true, true, true);
+    private int startFlameIndex = 0;
+    private ArrayList<Flame> flameUp = new ArrayList<>();
+    private ArrayList<Flame> flameDown = new ArrayList<>();
+    private ArrayList<Flame> flameRight = new ArrayList<>();
+    private ArrayList<Flame> flameLeft = new ArrayList<>();
 
     private double explosionSeconds;
-    private double flameSeconds;
-    private double elapsedTime;
+    private double flameSeconds = 0.04;
+    private double elapsedTime = 0;
 
     public Bomb(GameModel model, Point2D point, double radius, double explosionSeconds) {
-        this(model, point, radius, model.getCubeSize(), explosionSeconds, 0.04);
+        this(model, point, radius, model.getCubeSize(), explosionSeconds);
     }
 
     public Bomb(GameModel model, Point2D point, double radius) {
-        this(model, point, radius, model.getCubeSize(), -1, 0.04);
+        this(model, point, radius, model.getCubeSize(), -1);
     }
 
-    private Bomb(GameModel model, Point2D imagePoint, double radius, Dimension size, double explosionSeconds, double flameSeconds) {
+    private Bomb(GameModel model, Point2D imagePoint, double radius, Dimension size, double explosionSeconds) {
         super(model, null, imagePoint, null, size, "src/data/picture/bomb/bomb.png");
         this.areaPoint = new Point2D.Double(imagePoint.getX() + size.getWidth() * 0.1,
                 imagePoint.getY() + size.getHeight() * 0.1);
@@ -48,27 +48,14 @@ public class Bomb extends Sprite {
                 size.getHeight() * 0.8));
         this.radius = radius;
         this.size = size;
-        this.isDestroyed = false;
-        this.bombAction = new Action(true, true, true, true);
-        this.startFlameIndex = 0;
-        
-        this.flameUp = new ArrayList<>();
-        this.flameDown = new ArrayList<>();
-        this.flameRight = new ArrayList<>();
-        this.flameLeft = new ArrayList<>();
+
         flameUp.add(new Flame(model, getAreaPoint(), new Action(true, false, false, false)));
         flameDown.add(new Flame(model, getAreaPoint(), new Action(false, true, false, false)));
         flameRight.add(new Flame(model, getAreaPoint(), new Action(false, false, false, true)));
         flameLeft.add(new Flame(model, getAreaPoint(), new Action(false, false, true, false)));
         
         this.explosionSeconds = explosionSeconds;
-        this.flameSeconds = flameSeconds;
-        this.elapsedTime = 0;
         this.radiusIndex = (int)(radius / model.getCubeSize().width);
-    }
-
-    public boolean isDistroyed() {
-        return isDestroyed;
     }
 
     @Override
@@ -99,7 +86,7 @@ public class Bomb extends Sprite {
             return;
         }
 
-        elapsedTime -= flameSeconds;
+        elapsedTime = 0;
         if(bombAction.any()) {
             // the explosion slows down
             flameSeconds *= 1 + 0.3/radiusIndex;
@@ -165,27 +152,18 @@ public class Bomb extends Sprite {
     }
     
     private boolean eliminateSprite(Sprite sprite) {
-        if(sprite instanceof Player){
-            if(sprite instanceof Player)
-            {
-                Player p = (Player) sprite;
-                if(p.getInvulnerability())
-                { return true; }
-                sprite.destructor();
-            }
+        if(sprite instanceof PowerUp) {
+            return false;
         }
-        if(sprite instanceof Wall || sprite instanceof PowerUp) {
-            return true;
-        }
-        else if (sprite instanceof Bomb) {
-            if(!((Bomb)sprite).isDistroyed()) {
-                sprite.destructor();
-            }
+        else if(sprite instanceof Wall) {
             return true;
         }
         else {
             sprite.destructor();
             if (sprite instanceof Box || sprite instanceof Barrier) {
+                return true;
+            }
+            else if(sprite instanceof Bomb) {
                 return true;
             }
         }
