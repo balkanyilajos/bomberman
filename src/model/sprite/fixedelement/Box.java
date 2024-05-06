@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-
 import java.awt.Image;
 
 import model.GameModel;

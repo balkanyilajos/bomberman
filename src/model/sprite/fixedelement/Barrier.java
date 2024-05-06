@@ -21,12 +21,12 @@ public class Barrier extends Sprite {
     private int eliminationIndex;
 
     public Barrier(GameModel model, Point2D point) {
-        this(model, point, model.getCubeSize(), new Point2D.Double(point.getX() - model.getCubeSize().width * 2 * 0.24, point.getY() - model.getCubeSize().height * 1.4 * 0.2), new Dimension((int) (model.getCubeSize().width * 2), (int) (model.getCubeSize().height * 1.4)));
+        this(model, point, new Point2D.Double(point.getX() - model.getCubeSize().width * 2 * 0.24, point.getY() - model.getCubeSize().height * 1.4 * 0.2), model.getCubeSize(), new Dimension((int) (model.getCubeSize().width * 2), (int) (model.getCubeSize().height * 1.4)));
     }
 
-    public Barrier(GameModel model, Point2D areaPoint, Dimension areaSize, Point2D imagePoint, Dimension imageSize) {
-        super(model, new Area(new Rectangle2D.Double(imagePoint.getX(), imagePoint.getY(), imageSize.getWidth(),
-            imageSize.getHeight())), imagePoint, areaPoint, imageSize, "src/data/picture/barrier/0.png");
+    public Barrier(GameModel model, Point2D areaPoint, Point2D imagePoint, Dimension areaSize, Dimension imageSize) {
+        super(model, new Area(new Rectangle2D.Double(areaPoint.getX(), areaPoint.getY(), areaSize.getWidth(),
+        areaSize.getHeight())), imagePoint, areaPoint, imageSize, "src/data/picture/barrier/0.png");
 
         isDestroyed = false;
         elapsedTime = 0;
