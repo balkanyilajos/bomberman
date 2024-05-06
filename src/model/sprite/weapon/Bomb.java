@@ -89,7 +89,7 @@ public class Bomb extends Sprite {
         elapsedTime = 0;
         if(bombAction.any()) {
             // the explosion slows down
-            flameSeconds *= 1 + 0.3/radiusIndex;
+            flameSeconds *= 1 + 0.2/radiusIndex;
         }
         else {
             if(flameUp.size() >= startFlameIndex || flameDown.size() >= startFlameIndex ||
@@ -152,21 +152,18 @@ public class Bomb extends Sprite {
     }
     
     private boolean eliminateSprite(Sprite sprite) {
-        if(sprite instanceof PowerUp) {
-            return false;
-        }
-        else if(sprite instanceof Wall) {
+        if(sprite instanceof Wall) {
             return true;
         }
-        else {
+        
+        if(!(sprite instanceof PowerUp)) {
             sprite.destructor();
-            if (sprite instanceof Box || sprite instanceof Barrier) {
-                return true;
-            }
-            else if(sprite instanceof Bomb) {
-                return true;
-            }
         }
+        
+        if (sprite instanceof Box || sprite instanceof Barrier || sprite instanceof Bomb) {
+            return true;
+        }
+
         return false;
     }
 
