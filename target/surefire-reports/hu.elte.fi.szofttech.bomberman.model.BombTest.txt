@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: hu.elte.fi.szofttech.bomberman.model.BombTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.216 s - in hu.elte.fi.szofttech.bomberman.model.BombTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.742 s - in hu.elte.fi.szofttech.bomberman.model.BombTest

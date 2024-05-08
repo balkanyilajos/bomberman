@@ -223,6 +223,10 @@ public class Player extends MoveableSprite {
         Barrier barrier = new Barrier(model, imagePoint);
     }
 
+    public Point2D getImagePoint() {
+        return imagePoint;
+    }
+
     @Override
     public void destructor() {
         if (hasInvulnarability) {
