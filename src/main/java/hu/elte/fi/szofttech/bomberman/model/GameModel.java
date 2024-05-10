@@ -145,13 +145,11 @@ public class GameModel {
                         waitSec = waitSec - deltaTime;
                         if(waitSec <= 0)
                         {
-                            System.out.println(waitSec);
                             timer.stop();
                             wonRoundNumber = wonRoundNumber-1;
                             if(winner != null)
-                            { winner.won(); System.out.println(winner.getWonRoundNumber()+"*");}
+                            { winner.won(); }
                             if(wonRoundNumber == 0){ return; }
-                            System.out.println(wonRoundNumber);
                             init(MapPath, playerActions.size(), wonRoundNumber);
                             start(cubeSize);
                         }

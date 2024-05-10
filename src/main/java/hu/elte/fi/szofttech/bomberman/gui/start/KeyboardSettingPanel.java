@@ -174,7 +174,6 @@ public class KeyboardSettingPanel extends JPanel {
     }
 
     private void reset(boolean setDef) {
-        System.out.println(setDef);
         if (setDef) {
             this.p1 = new int[5];
             p1[0] = KeyEvent.VK_W;
@@ -198,16 +197,12 @@ public class KeyboardSettingPanel extends JPanel {
             p1 = keyReaderWriter.getMoves(1);
             p2 = keyReaderWriter.getMoves(2);
             p3 = keyReaderWriter.getMoves(3);
-            System.out.println("**");
             for (int i = 0; i < p1.length; i++) {
                 char c = (char) p1[i];
-                System.out.println(Character.toString(c));
             }
-            System.out.println("**");
         }
         for (int i = 0; i < p1.length; i++) {
             char c = (char) p1[i];
-            System.out.println(Character.toString(c));
         }
     }
 

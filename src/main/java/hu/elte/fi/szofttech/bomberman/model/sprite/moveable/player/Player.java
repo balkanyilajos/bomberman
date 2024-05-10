@@ -127,13 +127,11 @@ public class Player extends MoveableSprite {
         powerUps.add(powerup);
         increaseExplosion(1);
         hasBlastBooster = true;
-        System.out.println("S");
     }
 
     public void unsetBlastBooster() {
         if(hasBlastBooster)
         {
-        System.out.println("E");
         decreaseExposion(1);
         hasBlastBooster = false;
         }
