@@ -30,6 +30,8 @@ public class GameModel {
     private String MapPath;
     private int playerNumber;
     private int wonRoundNumber;
+    private double waitSec;
+    private Player winner;
 
     private ArrayList<Sprite>[][] board;
     private HashSet<Sprite> sprites;
@@ -48,12 +50,16 @@ public class GameModel {
     private Timer timer;
     private long previousTime;
     private ArrayList<PlayerAction> playerActions;
+    private ArrayList<Player> players  = new ArrayList<Player>();
     // private int gameOverCooldownSeconds;
 
     public GameModel(GameWindow window, String mapPath, int wonRoundNumber,
             ArrayList<PlayerAction> playerActions) {
         this.playerActions = playerActions;
         this.window = window;
+        players.add(null);
+        players.add(null);
+        players.add(null);
         createTimer();
         init(mapPath, playerActions.size(), wonRoundNumber);
     }
@@ -65,6 +71,8 @@ public class GameModel {
         this.previousTime = System.nanoTime();
         this.sprites = new HashSet<>();
         this.deletedSprites = new HashSet<>();
+        this.winner = null;
+        this.waitSec = 15;
 
         try {
             this.boardIndexSize = MapReader.getBoardIndexSize(mapPath);
@@ -93,6 +101,18 @@ public class GameModel {
         timer.start();
     }
 
+    public void setPlayer(int index, Player player)
+    {
+        if(index<0 || index >= players.size()){ return; }
+        players.set(index, player);
+    }
+
+    public Player getPlayer(int index)
+    {
+        if(index<0 || index >= players.size()){ return null; }
+        return players.get(index);
+    }
+
     public void setCubeSize(Dimension cubeSize) {
         this.cubeSize = cubeSize;
     }
@@ -119,6 +139,23 @@ public class GameModel {
 
                 if (window != null) {
                     window.repaint();
+                    if(isEnd())
+                    {
+                        System.out.println(wonRoundNumber);
+                        waitSec = waitSec - deltaTime;
+                        if(waitSec <= 0)
+                        {
+                            System.out.println(waitSec);
+                            timer.stop();
+                            wonRoundNumber = wonRoundNumber-1;
+                            if(winner != null)
+                            { winner.won(); System.out.println(winner.getWonRoundNumber()+"*");}
+                            if(wonRoundNumber == 0){ return; }
+                            System.out.println(wonRoundNumber);
+                            init(MapPath, playerActions.size(), wonRoundNumber);
+                            start(cubeSize);
+                        }
+                    }
                 }
             }
         });
@@ -172,19 +209,16 @@ public class GameModel {
         return returnSprites;
     }
 
-    public boolean isWin() {
+    public boolean isEnd() {
         int numberOfActivePlayers = 0;
+        winner = null;
         for (Sprite sprite : sprites) {
             if (sprite instanceof Player) {
                 numberOfActivePlayers++;
+                winner = (Player) sprite;
             }
         }
-
-        if (numberOfActivePlayers == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return numberOfActivePlayers < 2;
     }
 
     @SuppressWarnings("unchecked")
@@ -198,6 +232,11 @@ public class GameModel {
     }
 
     public void addSpriteToBoard(Sprite sprite) {
+        if( sprite instanceof Player)
+        {
+            Player p = (Player) sprite;
+            players.add(p);
+        }
         if (deletedSprites.contains(sprite)) {
             System.out.println("Already deleted!");
             return;

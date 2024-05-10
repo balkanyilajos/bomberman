@@ -72,6 +72,23 @@ public class MapReader {
         return cubeSize;
     }
 
+    private Player setPlayer(int index, Point2D point)
+    {
+        Player player = new Player(model, actions.get(index), point,
+                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+        Player p = model.getPlayer(index);
+        if(p != null)
+        {
+            p.reset(point);
+            return p;
+        }
+        else
+        {
+            model.setPlayer(index, player);
+        }
+        return player;
+    }
+
     @SuppressWarnings("unchecked")
     private void initBoard() {
         board = new ArrayList[boardIndexSize.height][boardIndexSize.width];
@@ -124,8 +141,7 @@ public class MapReader {
                             break;
 
                         case "1":
-                            Player player1 = new Player(model, actions.get(0), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player1 = setPlayer(0, point);
                             board[i][j].add(player1);
                             sprites.add(player1);
                             break;
