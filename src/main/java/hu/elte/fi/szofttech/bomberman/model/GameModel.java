@@ -141,15 +141,28 @@ public class GameModel {
                     window.repaint();
                     if(isEnd())
                     {
-                        System.out.println(wonRoundNumber);
                         waitSec = waitSec - deltaTime;
                         if(waitSec <= 0)
                         {
                             timer.stop();
                             wonRoundNumber = wonRoundNumber-1;
                             if(winner != null)
-                            { winner.won(); }
-                            if(wonRoundNumber == 0){ return; }
+                            { winner.won(); System.out.println("Round win*"+winner);}
+                            System.out.println(winner == null ? "No winner" : winner);
+                            //System.out.println(wonRoundNumber);
+                            if(wonRoundNumber == 0)
+                            {
+                                int p1 = getPlayer(0) == null ? 0 : getPlayer(0).getWonRoundNumber();
+                                int p2 = getPlayer(1) == null ? 0 : getPlayer(1).getWonRoundNumber();
+                                int p3 = getPlayer(2) == null ? 0 : getPlayer(2).getWonRoundNumber();
+                                Player win = null;
+                                if( p1 < p2) { win = getPlayer(1); }
+                                else if(p1 > p2) { win = getPlayer(0); }
+                                if( (win == null ? 0 : win.getWonRoundNumber()) < p3) { win = getPlayer(2); }
+                                else if((win == null ? 0 : win.getWonRoundNumber()) == p3) { win = null; }
+                                System.out.println("Game win*"+win);
+                                return;
+                            }
                             init(MapPath, playerActions.size(), wonRoundNumber);
                             start(cubeSize);
                         }

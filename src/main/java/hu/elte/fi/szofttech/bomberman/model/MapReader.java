@@ -79,13 +79,14 @@ public class MapReader {
         Player p = model.getPlayer(index);
         if(p != null)
         {
-            p.reset(point);
-            return p;
+            player = p;
+            player.reset(point);
         }
         else
         {
             model.setPlayer(index, player);
         }
+        System.out.println("P"+(index+1)+": "+player);
         return player;
     }
 
@@ -147,15 +148,13 @@ public class MapReader {
                             break;
 
                         case "2":
-                            Player player2 = new Player(model, actions.get(1), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player2 = setPlayer(1, point);
                             board[i][j].add(player2);
                             sprites.add(player2);
                             break;
 
                         case "3":
-                            Player player3 = new Player(model, actions.get(2), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player3 = setPlayer(2, point);
                             board[i][j].add(player3);
                             sprites.add(player3);
                             break;
