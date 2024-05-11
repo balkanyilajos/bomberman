@@ -72,6 +72,24 @@ public class MapReader {
         return cubeSize;
     }
 
+    private Player setPlayer(int index, Point2D point)
+    {
+        Player player = new Player(model, actions.get(index), point,
+                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+        Player p = model.getPlayer(index);
+        if(p != null)
+        {
+            player = p;
+            player.reset(point);
+        }
+        else
+        {
+            model.setPlayer(index, player);
+        }
+        System.out.println("P"+(index+1)+": "+player);
+        return player;
+    }
+
     @SuppressWarnings("unchecked")
     private void initBoard() {
         board = new ArrayList[boardIndexSize.height][boardIndexSize.width];
@@ -124,22 +142,19 @@ public class MapReader {
                             break;
 
                         case "1":
-                            Player player1 = new Player(model, actions.get(0), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player1 = setPlayer(0, point);
                             board[i][j].add(player1);
                             sprites.add(player1);
                             break;
 
                         case "2":
-                            Player player2 = new Player(model, actions.get(1), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player2 = setPlayer(1, point);
                             board[i][j].add(player2);
                             sprites.add(player2);
                             break;
 
                         case "3":
-                            Player player3 = new Player(model, actions.get(2), point,
-                                    GeneralPath.getPath() + "/picture/player/gamer.png");
+                            Player player3 = setPlayer(2, point);
                             board[i][j].add(player3);
                             sprites.add(player3);
                             break;

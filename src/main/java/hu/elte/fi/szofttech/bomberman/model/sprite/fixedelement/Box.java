@@ -73,7 +73,6 @@ public class Box extends Sprite {
                     Detonator d = new Detonator(model, areaPoint);
                     model.addSpriteToBoard(d);
                 }
-                System.out.println(pu);
                 super.destructor();
                 return;
             }

@@ -26,6 +26,7 @@ public class Player extends MoveableSprite {
     private int numberOfBombs = 1;
     private int numberOfPlacedBomb = 0;
     private int numberOfBarriers = 1;
+    private int wonRoundNumber = 0;
     private double secTime;
     private boolean hasDetonator = false;
     private boolean hasRollerSkater = false;
@@ -76,6 +77,22 @@ public class Player extends MoveableSprite {
         }
     }
 
+    public void reset(Point2D point)
+    {
+        this.imagePoint = point;
+        this.areaPoint = new Point2D.Double(imagePoint.getX() + 10,
+                imagePoint.getY() + 10);
+        this.area = new Area(
+                new Ellipse2D.Double(areaPoint.getX() + model.getCubeSize().getWidth() / 4, areaPoint.getY(),
+                        model.getCubeSize().getWidth() * 0.5,
+                        model.getCubeSize().getHeight() * 0.8));
+        unsetInvulnerability();
+        unsetBlastBooster();
+        unsetBombBooster();
+        unsetRollerSkater();
+        powerUps = new ArrayList<PowerUp>();
+    }
+
     public void setInvulnerability(Invulnerability powerup) {
         if (hasInvulnarability) {
             return;
@@ -97,7 +114,10 @@ public class Player extends MoveableSprite {
     }
 
     public void unsetBombBooster() {
+        if(numberOfBombs > 1)
+        {
         increaseNumberOfBombs(-1);
+        }
     }
 
     public void setBlastBooster(BlastBooster powerup) {
@@ -107,13 +127,14 @@ public class Player extends MoveableSprite {
         powerUps.add(powerup);
         increaseExplosion(1);
         hasBlastBooster = true;
-        System.out.println("S");
     }
 
     public void unsetBlastBooster() {
-        System.out.println("E");
+        if(hasBlastBooster)
+        {
         decreaseExposion(1);
         hasBlastBooster = false;
+        }
     }
 
     public void setDetonator(Detonator powerup) {
@@ -125,13 +146,22 @@ public class Player extends MoveableSprite {
     }
 
     public void unsetDetonator() {
+        if(hasDetonator)
+        {
         hasDetonator = false;
         detonateBombs();
+        }
     }
 
     public boolean getInvulnerability() {
         return hasInvulnarability;
     }
+
+    public void won()
+    { wonRoundNumber++; }
+
+    public int getWonRoundNumber()
+    { return wonRoundNumber; }
 
     public void setGhostForm(double secTime) {
         hasGhostForm = true;
@@ -147,8 +177,11 @@ public class Player extends MoveableSprite {
     }
 
     public void unsetRollerSkater() {
+        if(hasRollerSkater)
+        {
         hasRollerSkater = false;
         speed = speed / 2;
+        }
     }
 
     public void setNoBomb(double secTime) {
