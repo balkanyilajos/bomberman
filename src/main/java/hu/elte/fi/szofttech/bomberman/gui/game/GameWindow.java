@@ -6,7 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;

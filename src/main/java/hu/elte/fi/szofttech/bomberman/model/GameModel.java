@@ -12,7 +12,6 @@ import javax.swing.Timer;
 import hu.elte.fi.szofttech.bomberman.gui.game.GameWindow;
 import hu.elte.fi.szofttech.bomberman.model.sprite.Sprite;
 import hu.elte.fi.szofttech.bomberman.model.sprite.moveable.player.Player;
-import hu.elte.fi.szofttech.bomberman.model.sprite.weapon.Bomb;
 import hu.elte.fi.szofttech.bomberman.model.util.PlayerAction;
 import hu.elte.fi.szofttech.bomberman.GeneralPath;
 
@@ -22,8 +21,6 @@ public class GameModel {
             GeneralPath.getPath() + "/map/2",
             GeneralPath.getPath() + "/map/3"
     };
-
-    private static final String Player = null;
 
     private final GameWindow window;
 

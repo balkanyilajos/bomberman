@@ -1,26 +1,19 @@
 package hu.elte.fi.szofttech.bomberman.model.sprite.moveable.enemy;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 
 import hu.elte.fi.szofttech.bomberman.model.GameModel;
 import hu.elte.fi.szofttech.bomberman.model.sprite.Sprite;
-import hu.elte.fi.szofttech.bomberman.model.sprite.fixedelement.Barrier;
 import hu.elte.fi.szofttech.bomberman.model.sprite.moveable.MoveableSprite;
-import hu.elte.fi.szofttech.bomberman.model.sprite.weapon.Bomb;
 import hu.elte.fi.szofttech.bomberman.model.sprite.moveable.player.Player;
-import hu.elte.fi.szofttech.bomberman.model.util.Action;
 import hu.elte.fi.szofttech.bomberman.model.util.PlayerAction;
 
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.Random;
 

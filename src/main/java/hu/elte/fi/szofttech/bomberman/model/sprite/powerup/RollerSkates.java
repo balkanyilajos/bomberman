@@ -1,22 +1,13 @@
 package hu.elte.fi.szofttech.bomberman.model.sprite.powerup;
 
-import hu.elte.fi.szofttech.bomberman.gui.game.BoardPanel;
 import hu.elte.fi.szofttech.bomberman.model.GameModel;
-import hu.elte.fi.szofttech.bomberman.model.sprite.Sprite;
 import hu.elte.fi.szofttech.bomberman.model.sprite.moveable.player.Player;
 import hu.elte.fi.szofttech.bomberman.GeneralPath;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Ellipse2D;
-import java.io.File;
-import java.io.IOException;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 public class RollerSkates extends PowerUp {
 

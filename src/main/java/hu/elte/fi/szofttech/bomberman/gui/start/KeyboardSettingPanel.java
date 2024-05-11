@@ -7,17 +7,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import hu.elte.fi.szofttech.bomberman.gui.button.GameImageButton;
 import hu.elte.fi.szofttech.bomberman.gui.button.GameTextButton;
 import hu.elte.fi.szofttech.bomberman.model.KeyReaderWriter;
-import hu.elte.fi.szofttech.bomberman.model.GameModel;
 import hu.elte.fi.szofttech.bomberman.GeneralPath;
 
 public class KeyboardSettingPanel extends JPanel {
@@ -30,7 +27,6 @@ public class KeyboardSettingPanel extends JPanel {
     private int playerNumber;
     private GridBagConstraints gbc;
     private GameTextButton[] keys;
-    private boolean def;
 
     public KeyboardSettingPanel(StartPanel parentPanel) {
         setLayout(new GridBagLayout());
@@ -52,7 +48,6 @@ public class KeyboardSettingPanel extends JPanel {
                 button.setButtonGroup(keys);
 
             this.gbc = new GridBagConstraints();
-            this.def = false;
 
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -197,12 +192,6 @@ public class KeyboardSettingPanel extends JPanel {
             p1 = keyReaderWriter.getMoves(1);
             p2 = keyReaderWriter.getMoves(2);
             p3 = keyReaderWriter.getMoves(3);
-            for (int i = 0; i < p1.length; i++) {
-                char c = (char) p1[i];
-            }
-        }
-        for (int i = 0; i < p1.length; i++) {
-            char c = (char) p1[i];
         }
     }
 

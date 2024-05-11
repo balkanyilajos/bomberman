@@ -16,14 +16,12 @@ import javax.swing.JPanel;
 import hu.elte.fi.szofttech.bomberman.model.GameModel;
 
 public class MenuPanel extends JPanel {
-    private GameModel gameModel;
     private long startTime;
     private JLabel timerText;
     private DateTimeFormatter timeFormatter;
 
     public MenuPanel(GameModel gameModel) {
         setLayout(new GridBagLayout());
-        this.gameModel = gameModel;
         this.timeFormatter = DateTimeFormatter.ofPattern("mm:ss");
         this.startTime = System.nanoTime();
         this.timerText = new JLabel();
