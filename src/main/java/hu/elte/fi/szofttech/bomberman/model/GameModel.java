@@ -22,6 +22,8 @@ public class GameModel {
             GeneralPath.getPath() + "/map/3"
     };
 
+    private static final String Player = null;
+
     private final GameWindow window;
 
     private String MapPath;
