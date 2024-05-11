@@ -1,3 +1,5 @@
 # ignore binary files
 bin/
 .class
+.lst
+.xml

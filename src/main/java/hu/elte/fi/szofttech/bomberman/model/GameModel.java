@@ -160,7 +160,7 @@ public class GameModel {
                                 else if(p1 > p2) { win = getPlayer(0); }
                                 if( (win == null ? 0 : win.getWonRoundNumber()) < p3) { win = getPlayer(2); }
                                 else if((win == null ? 0 : win.getWonRoundNumber()) == p3) { win = null; }
-                                System.out.println("Game win*"+(win == null) ? "No winner" : win);
+                                System.out.println("Game win*" + ((win == null) ? "No winner" : win));
                                 return;
                             }
                             init(MapPath, playerActions.size(), wonRoundNumber);
