@@ -8,10 +8,7 @@ import java.util.HashSet;
 
 import hu.elte.fi.szofttech.bomberman.model.GameModel;
 import hu.elte.fi.szofttech.bomberman.model.sprite.Sprite;
-import hu.elte.fi.szofttech.bomberman.model.sprite.fixedelement.Barrier;
-import hu.elte.fi.szofttech.bomberman.model.sprite.fixedelement.Box;
-import hu.elte.fi.szofttech.bomberman.model.sprite.fixedelement.Wall;
-import hu.elte.fi.szofttech.bomberman.model.sprite.moveable.player.Player;
+import hu.elte.fi.szofttech.bomberman.model.sprite.fixedelement.*;
 import hu.elte.fi.szofttech.bomberman.model.sprite.powerup.*;
 import hu.elte.fi.szofttech.bomberman.model.util.Action;
 import hu.elte.fi.szofttech.bomberman.GeneralPath;
