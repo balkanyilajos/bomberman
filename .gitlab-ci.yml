@@ -53,3 +53,6 @@ deploy-job:      # This job runs in the deploy stage.
     paths:
       - public
     expire_in: 1 day
+  only:
+    - master
+
