@@ -39,6 +39,8 @@ public class Player extends MoveableSprite {
     private double cubeSize = model.getCubeSize().getWidth();
     private ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     private Bomb lastBomb;
+    // For tests
+    double division;
 
     private ArrayList<PowerUp> powerUps;
 
@@ -227,6 +229,15 @@ public class Player extends MoveableSprite {
         return imagePoint;
     }
 
+    // Only for test cases.
+    public void setPlayerAction(PlayerAction action) {
+        this.action = action;
+    }
+
+    public double getDivisonInMove() {
+        return division;
+    }
+
     @Override
     public void destructor() {
         if (hasInvulnarability) {
@@ -240,7 +251,7 @@ public class Player extends MoveableSprite {
     @Override
     public void move(double deltaTime) {
         Point2D previousAreaPoint = (Point2D) areaPoint.clone();
-        double division = 1;
+        division = 1;
         if (action.up && action.left || action.up && action.right || action.down && action.left
                 || action.down && action.right) {
             division = Math.sqrt(2);
