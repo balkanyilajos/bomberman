@@ -45,8 +45,11 @@ test:
     - mvn test
 
 deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+  stage: deploy
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - mvn javadoc:javadoc
+    - cp -r target/site/apidocs/. public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day

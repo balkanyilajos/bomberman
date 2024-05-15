@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: hu.elte.fi.szofttech.bomberman.model.PlayerTest
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.074 s - in hu.elte.fi.szofttech.bomberman.model.PlayerTest
