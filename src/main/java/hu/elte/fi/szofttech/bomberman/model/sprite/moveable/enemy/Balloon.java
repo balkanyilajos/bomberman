@@ -143,12 +143,4 @@ public class Balloon extends MoveableSprite {
         }
     }
 
-    @Override
-    public void draw(Graphics graphics) {
-        super.draw(graphics);
-        Graphics2D gr = (Graphics2D) graphics;
-        gr.setPaint(Color.GREEN);
-        gr.fill(area);
-    }
-
 }

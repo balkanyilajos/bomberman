@@ -3,7 +3,6 @@ package hu.elte.fi.szofttech.bomberman.model.sprite.moveable.player;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 
 import hu.elte.fi.szofttech.bomberman.model.GameModel;
@@ -393,12 +392,4 @@ public class Player extends MoveableSprite {
         move(deltaTime);
         usePowerUps(deltaTime);
     }
-
-    @Override
-    public void draw(Graphics graphics) {
-        super.draw(graphics);
-        Graphics2D gr = (Graphics2D) graphics;
-        gr.fill(area);
-    }
-
 }
