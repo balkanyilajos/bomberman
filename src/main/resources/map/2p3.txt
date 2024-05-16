@@ -1,12 +1,12 @@
 11 11
 X X X X X X X X X X X
-X _ _ _ _ _ _ _ _ 2 X
-X _ X _ X _ X _ X _ X
-X _ _ _ _ _ _ _ _ _ X
-X _ X _ X _ X _ X _ X
-X _ _ _ _ _ _ _ _ _ X
-X _ X _ X _ X _ X _ X
-X _ _ _ _ _ _ _ _ _ X
-X _ X _ X _ X _ X _ X
-X 1 _ _ _ _ _ _ _ 3 X
+X _ N N _ 2 _ N _ _ X
+X _ X _ X N X _ X _ X
+X N _ _ _ M N N _ N X
+X _ X _ X _ X _ X N X
+X _ _ M _ N _ N _ M X
+X _ X N X _ X _ X _ X
+X N _ N _ _ _ N _ N X
+X _ X N X M X _ X _ X
+X 1 _ N _ _ M N _ 3 X
 X X X X X X X X X X X
