@@ -15,4 +15,11 @@ public class PlayerAction extends Action {
         placeBomb = placeBarrier = false;
     }
 
+    public PlayerAction(boolean up, boolean down, boolean left, boolean right, boolean placeBomb,
+            boolean placeBarrier) {
+        super(up, down, left, right);
+        this.placeBomb = placeBomb;
+        this.placeBarrier = placeBarrier;
+    }
+
 }
